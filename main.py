@@ -16673,9 +16673,9 @@ class InstagramAccountCreator2025:
             
             # Generate behavior profile - country-agnostic
             if connection_type == "mobile":
-                user_type = random.choice(["casual_user", "tech_savvy_user", "young_adult_user"])
+                user_type = random.choice(["casual_indonesian", "tech_savvy_indonesian", "young_adult_indonesian"])
             else:
-                user_type = random.choice(["professional_user", "casual_user"])
+                user_type = random.choice(["professional_indonesian", "casual_indonesian"])
             
             behavior_profile = self.behavior_system.generate_behavior_profile(user_type)
             
