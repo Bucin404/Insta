@@ -448,7 +448,7 @@ class APIAntiDetectionTiming:
         self.rate_limit_hits = {}
     
     def get_api_delay(self, request_type: str = "default") -> float:
-        """Get optimal delay for API requests
+        """Get optimal delay for API requests with human-like patterns
         
         Request types:
         - csrf: Get CSRF token (fast)
@@ -460,24 +460,37 @@ class APIAntiDetectionTiming:
         - between_accounts: Between account creations
         """
         delays = {
-            "csrf": (0.5, 1.5),
-            "check_email": (1.0, 2.5),
-            "check_username": (1.0, 2.5),
-            "send_code": (1.5, 3.0),
-            "verify_code": (2.0, 4.0),
-            "create_account": (2.0, 5.0),
-            "between_accounts": (8.0, 15.0),
-            "after_error": (3.0, 6.0),
-            "after_rate_limit": (30.0, 60.0),
-            "default": (1.0, 3.0),
+            "csrf": (0.8, 2.0),  # Increased min for more human-like
+            "check_email": (1.5, 3.5),  # Increased range
+            "check_username": (1.5, 3.5),
+            "send_code": (2.0, 4.5),  # More variation
+            "verify_code": (2.5, 5.5),  # More variation
+            "create_account": (3.0, 7.0),  # More conservative
+            "between_accounts": (12.0, 25.0),  # Much longer between accounts
+            "after_error": (5.0, 10.0),  # Longer after errors
+            "after_rate_limit": (45.0, 90.0),  # Much longer after rate limit
+            "default": (1.5, 4.0),
         }
         
         min_delay, max_delay = delays.get(request_type, delays["default"])
         
-        # Add slight randomness for natural timing
-        delay = random.uniform(min_delay, max_delay)
+        # Use beta distribution for more natural timing
+        # Beta(2,5) creates a distribution skewed towards min_delay
+        # which simulates human behavior (usually quick, occasionally slow)
+        import numpy as np
+        try:
+            # Beta distribution for natural randomness
+            beta_value = np.random.beta(2, 5)
+            delay = min_delay + (max_delay - min_delay) * beta_value
+        except:
+            # Fallback to uniform if numpy fails
+            delay = random.uniform(min_delay, max_delay)
         
-        return delay
+        # Add micro-jitter to avoid detection patterns
+        jitter = random.uniform(-0.1, 0.1)
+        delay += jitter
+        
+        return max(0.5, delay)  # Minimum 0.5s
     
     def start_session(self, session_id: str):
         """Mark session start time"""
@@ -547,6 +560,57 @@ class APIAntiDetectionTiming:
             return True, "Too many requests"
         
         return False, ""
+    
+    def get_typing_delay(self, text_length: int) -> float:
+        """Calculate human-like typing delay based on text length
+        
+        Simulates realistic typing speed: 40-60 WPM (words per minute)
+        Average: 50 WPM = ~250 chars/min = ~4.2 chars/sec = ~0.24s per char
+        
+        Args:
+            text_length: Length of text being typed
+            
+        Returns:
+            Delay in seconds
+        """
+        # Base typing speed: 40-60 WPM
+        chars_per_second = random.uniform(3.5, 5.0)  # 42-60 WPM
+        
+        # Calculate base delay
+        base_delay = text_length / chars_per_second
+        
+        # Add thinking pauses (10-30% chance of pause)
+        if random.random() < 0.2:
+            thinking_pause = random.uniform(0.5, 2.0)
+            base_delay += thinking_pause
+        
+        # Add micro-variations for natural rhythm
+        variation = base_delay * random.uniform(-0.15, 0.15)
+        
+        return max(0.5, base_delay + variation)
+    
+    def get_reading_delay(self, content_length: int = 100) -> float:
+        """Calculate human-like reading delay
+        
+        Average reading speed: 200-300 words per minute
+        Average word length: 5 characters
+        
+        Args:
+            content_length: Approximate length of content being read
+            
+        Returns:
+            Delay in seconds
+        """
+        # Reading speed: 200-300 WPM
+        words = content_length / 5  # Approx words
+        wpm = random.uniform(200, 300)
+        
+        reading_time = (words / wpm) * 60  # Convert to seconds
+        
+        # Add comprehension pause
+        comprehension = random.uniform(0.5, 1.5)
+        
+        return max(1.0, reading_time + comprehension)
 
 
 # Global API anti-detection timing instance
@@ -1157,7 +1221,7 @@ class UnifiedSessionManager2025:
         return {
             "os_type": "android",
             "os": "Android",
-            "os_version": random.choice(["13", "14"]),
+            "os_version": random.choice(["14", "15"]),  # Android 14, 15 (2024-2025)
             "device": device,
             "device_model": device.split()[-1] if " " in device else device,
             "country": country,
@@ -1176,7 +1240,7 @@ class UnifiedSessionManager2025:
         if "mac" in device.lower():
             os_type = "macos"
             os_name = "macOS"
-            os_version = random.choice(["14.4", "14.3", "14.2"])
+            os_version = random.choice(["14.5", "14.6", "14.7"])  # macOS Sonoma (2024-2025)
         else:
             os_type = "windows"
             os_name = "Windows"
@@ -1363,7 +1427,7 @@ class UnifiedSessionManager2025:
             return {
                 "os_type": "macos",
                 "os_name": "macOS",
-                "os_version": random.choice(["13.0", "13.5", "14.0", "14.2"]),
+                "os_version": random.choice(["14.0", "14.5", "15.0", "15.1"]),  # Android 14-15 (2024-2025)
                 "device_brand": "Apple",
                 "device_model": random.choice(["MacBook Pro 16", "MacBook Pro 14", "MacBook Air M2"]),
                 "screen_width": random.choice([2560, 3024, 3456]),
@@ -3169,7 +3233,7 @@ class AdvancedBrowserFingerprint2025:
             device_type = random.choice(["android", "desktop"])
         
         if device_type in ["android", "mobile"]:
-            android_version = random.choice([12, 13, 14, 15])
+            android_version = random.choice([13, 14, 15])  # Android 13-15 (2023-2025)
             return {
                 "platform": "Linux armv8l",
                 "version": str(android_version),
@@ -3188,7 +3252,7 @@ class AdvancedBrowserFingerprint2025:
                     "architecture": "x86_64",
                 }
             else:
-                macos_version = random.choice(["10.15", "13.0", "14.0", "14.5"])
+                macos_version = random.choice(["13.0", "14.0", "14.5", "14.6", "15.0"])  # macOS Ventura to Sequoia (2024-2025)
                 return {
                     "platform": "MacIntel",
                     "version": macos_version,
@@ -4947,7 +5011,7 @@ class UltraStealthIPGenerator2025:
                     "type": "mobile",
                     "model": device,
                     "os": "iOS",
-                    "os_version": random.choice(["17.4", "17.3", "17.2", "17.1"]),
+                    "os_version": random.choice(["17.4", "17.5", "17.6", "18.0", "18.1"]),  # iOS 17-18 (2024-2025)
                     "browser": "Safari",
                     "browser_version": random.choice(["17.4", "17.3", "17.2"]),
                 }
@@ -4956,7 +5020,7 @@ class UltraStealthIPGenerator2025:
                     "type": "mobile",
                     "model": device,
                     "os": "Android",
-                    "os_version": random.choice(["14", "13", "12"]),
+                    "os_version": random.choice(["14", "15"]),  # Android 14-15 (2024-2025)
                     "browser": "Chrome",
                     "browser_version": random.choice(["122.0.6261", "121.0.6167", "120.0.6099"]),
                 }
@@ -7239,7 +7303,7 @@ class AdvancedIPStealthSystem2025:
             "model": device["model"],
             "name": device["name"],
             "connection_type": connection_type,  # FIXED: simpan connection type
-            "android_version": random.choice(["13", "14", "15"]),
+            "android_version": random.choice(["14", "15"]),  # Android 14-15 (2024-2025)
             "chrome_version": f"{random.randint(130, 135)}.0.{random.randint(6000, 7000)}.{random.randint(0, 99)}",
             "webview_version": f"{random.randint(110, 120)}.0.{random.randint(5000, 6000)}",
             "build_id": f"UP1A.{random.randint(230101, 231231)}.{random.randint(100, 999)}",
@@ -8069,6 +8133,17 @@ class AdvancedIPStealthSystem2025:
         
         if sessions_to_remove:
             print(f"{cyan}🧹  Cleaned up {len(sessions_to_remove)} old sessions{reset}")
+    
+    def destroy_session_ip(self, session_id: str):
+        """Destroy IP mapping for a specific session - ensures no IP carry-over
+        
+        Args:
+            session_id: Session ID to cleanup
+        """
+        if session_id in self.session_ip_map:
+            ip = self.session_ip_map[session_id]
+            del self.session_ip_map[session_id]
+            print(f"{cyan}    ✓ Removed IP mapping for session {session_id[:12]}... (IP: {ip}){reset}")
 
     def record_ip_result(self, ip: str, success: bool, proxy_detected: bool = False):
         """Record result of IP usage"""
@@ -11220,7 +11295,7 @@ class AdvancedFingerprinting2025:
         """Generate Android Chrome browser profile"""
         chrome_version = random.choice([131, 132, 133, 134, 135, 136])
         chrome_full = f"{chrome_version}.0.{random.randint(6778, 6998)}.{random.randint(0, 250)}"
-        android_version = random.choice(["13", "14", "15"])
+        android_version = random.choice(["14", "15"])  # Android 14-15 (2024-2025)
         device_model = random.choice([
             "SM-S928B", "SM-S918B", "SM-A546B", 
             "Pixel 8", "Pixel 7 Pro",
@@ -12721,6 +12796,28 @@ class EmailServiceManager2025:
         self.active_services.clear()
         
         print(f"{hijau}✅  All email sessions cleaned up{reset}")
+    
+    async def destroy_session_email(self, session_id: str):
+        """Destroy all emails associated with a session - ensures no email carry-over
+        
+        Args:
+            session_id: Session ID to cleanup emails for
+        """
+        emails_to_remove = []
+        
+        # Find all emails for this session
+        for email_addr, data in self.email_cache.items():
+            if data.get("session_id") == session_id:
+                emails_to_remove.append(email_addr)
+        
+        # Remove them
+        for email_addr in emails_to_remove:
+            if email_addr in self.email_cache:
+                del self.email_cache[email_addr]
+                print(f"{cyan}    ✓ Removed email {email_addr} from cache{reset}")
+        
+        if emails_to_remove:
+            print(f"{hijau}✅  Destroyed {len(emails_to_remove)} email(s) for session {session_id[:12]}...{reset}")
     
     async def __aenter__(self):
         """Context manager enter"""
@@ -15284,11 +15381,36 @@ class AdvancedSessionManager2025:
                 del self.sessions[session_id]
             if session_id in self.session_states:
                 del self.session_states[session_id]
+            if session_id in self.cookie_jar:
+                del self.cookie_jar[session_id]
         
         self._last_cleanup = current_time
         
         if sessions_to_remove:
             print(f"{cyan}🧹  Cleaned up {len(sessions_to_remove)} old sessions{reset}")
+    
+    def destroy_session(self, session_id: str):
+        """Destroy a specific session completely - CRITICAL for no carry-over
+        
+        This method ensures:
+        1. Session data is completely removed
+        2. Session state is cleared
+        3. Cookies are destroyed
+        4. No data carries over to next account
+        """
+        if session_id in self.sessions:
+            del self.sessions[session_id]
+            print(f"{cyan}    ✓ Destroyed session data for {session_id[:12]}...{reset}")
+        
+        if session_id in self.session_states:
+            del self.session_states[session_id]
+            print(f"{cyan}    ✓ Cleared session state for {session_id[:12]}...{reset}")
+        
+        if session_id in self.cookie_jar:
+            del self.cookie_jar[session_id]
+            print(f"{cyan}    ✓ Cleared cookies for {session_id[:12]}...{reset}")
+        
+        print(f"{hijau}✅  Session {session_id[:12]}... completely destroyed{reset}")
     
     def get_all_sessions(self, active_only: bool = True) -> List[Dict[str, Any]]:
         """Get all sessions"""
@@ -16637,10 +16759,20 @@ class InstagramAccountCreator2025:
                         "session_id": session_id,
                         "created_at": time.time()
                     })
+                    
+                    # **CRITICAL: Destroy session after successful account creation**
+                    # This ensures NO carry-over to the next account
+                    await self._destroy_session_completely(session_id)
+                    
                     return result
                 else:
                     # Return detailed error info for session management
                     error_type = creation_result.get("error_type", "unknown")
+                    
+                    # **CRITICAL: Destroy session after failed account creation**
+                    # This ensures NO carry-over to the next account
+                    await self._destroy_session_completely(session_id)
+                    
                     return self._record_failure(attempt_id, f"Account creation failed: {error_type}", error_type)
             # Backward compatibility for bool return
             elif creation_result:
@@ -16651,15 +16783,64 @@ class InstagramAccountCreator2025:
                     "session_id": session_id,
                     "created_at": time.time()
                 })
+                
+                # **CRITICAL: Destroy session after successful account creation**
+                await self._destroy_session_completely(session_id)
+                
                 return result
             else:
+                # **CRITICAL: Destroy session after failed account creation**
+                await self._destroy_session_completely(session_id)
+                
                 return self._record_failure(attempt_id, "Account creation failed", "unknown")
             
         except Exception as e:
             print(f"{merah}❌  Error in account creation: {e}{reset}")
             import traceback
             traceback.print_exc()
+            
+            # **CRITICAL: Destroy session on exception**
+            if session_id:
+                await self._destroy_session_completely(session_id)
+            
             return self._record_failure(attempt_id, f"Unexpected error: {str(e)}", "exception")
+    
+    async def _destroy_session_completely(self, session_id: str):
+        """Destroy session completely across ALL systems - CRITICAL FIX
+        
+        This ensures NO session data carries over to the next account.
+        Cleans up:
+        1. Session data and state (session manager)
+        2. IP mappings (IP system)
+        3. Email associations (email manager)
+        4. Cookies and tokens
+        5. HTTP client sessions
+        
+        Args:
+            session_id: Session ID to destroy completely
+        """
+        if not session_id:
+            return
+        
+        print(f"{kuning}🔄  Destroying session {session_id[:12]}... completely{reset}")
+        
+        # 1. Destroy session in session manager
+        if self.session_manager:
+            self.session_manager.destroy_session(session_id)
+        
+        # 2. Destroy IP mapping in IP system
+        if self.ip_system:
+            self.ip_system.destroy_session_ip(session_id)
+        
+        # 3. Destroy email associations in email manager
+        if self.email_manager:
+            await self.email_manager.destroy_session_email(session_id)
+        
+        # 4. Close HTTP client sessions if any
+        # Note: curl_cffi sessions are handled by the ChromeImpersonateClient
+        # which creates new sessions per request
+        
+        print(f"{hijau}✅  Session {session_id[:12]}... destroyed - ready for new account{reset}")
     
     async def _create_new_session(self) -> Optional[str]:
         """Buat session baru dengan semua komponen terintegrasi - RANDOM COUNTRY"""
@@ -16829,8 +17010,16 @@ class InstagramAccountCreator2025:
             return False
     
     async def _simulate_pre_signup_behavior(self, session_id: str):
-        """Simulasi perilaku sebelum signup"""
-        print(f"{cyan}🧠  Simulating pre-signup behavior...{reset}")
+        """Simulasi perilaku sebelum signup - ENHANCED for anti-checkpoint
+        
+        Simulates realistic user behavior before signing up:
+        - Landing page viewing
+        - Reading terms/privacy
+        - Scrolling behavior
+        - Mouse movements
+        - Hesitation patterns
+        """
+        print(f"{cyan}🧠  Simulating realistic pre-signup behavior...{reset}")
         
         session = self.session_manager.get_session(session_id)
         if not session:
@@ -16838,23 +17027,47 @@ class InstagramAccountCreator2025:
         
         behavior_profile = session["behavior_profile"]
         
-        # Generate interaction sequence
+        # 1. Simulate landing on Instagram homepage
+        print(f"{cyan}    → Landing on homepage...{reset}")
+        landing_delay = api_timing.get_reading_delay(500)  # Read homepage content
+        await asyncio.sleep(min(landing_delay, 3.0))
+        
+        # 2. Random chance to "read" about Instagram
+        if random.random() < 0.4:  # 40% chance
+            print(f"{cyan}    → Reading about Instagram...{reset}")
+            read_delay = api_timing.get_reading_delay(800)
+            await asyncio.sleep(min(read_delay, 4.0))
+        
+        # 3. Simulate scrolling behavior (micro-delays)
+        scroll_count = random.randint(1, 3)
+        for i in range(scroll_count):
+            scroll_delay = random.uniform(0.3, 0.8)
+            await asyncio.sleep(scroll_delay)
+        
+        # 4. Simulate "clicking" on sign up button with hesitation
+        if random.random() < 0.3:  # 30% chance of hesitation
+            print(f"{cyan}    → Hesitating before signup...{reset}")
+            hesitation = random.uniform(1.5, 3.5)
+            await asyncio.sleep(hesitation)
+        
+        # 5. Generate interaction sequence from behavior system
         interactions = self.behavior_system.simulate_interaction(
             behavior_profile=behavior_profile,
             interaction_type="instagram_exploration"
         )
         
-        # Record interactions
-        for interaction in interactions[:5]:  # First 5 interactions
+        # Record interactions (limit to avoid too long simulation)
+        for interaction in interactions[:3]:  # First 3 interactions only
             self.session_manager.update_session_state(session_id, {
                 "interaction_log": f"Pre-signup: {interaction['type']}"
             })
             
-            # Simulate delay
+            # Simulate realistic delay
             if interaction.get("duration"):
-                await asyncio.sleep(min(interaction["duration"], 0.1))
+                # Cap at 2 seconds to keep reasonable timing
+                await asyncio.sleep(min(interaction["duration"], 2.0))
         
-        print(f"{hijau}✅  Pre-signup behavior simulation complete{reset}")
+        print(f"{hijau}✅  Pre-signup behavior simulation complete (appeared human-like){reset}")
     
     async def _get_email_for_account(self, session_id: str) -> Optional[Dict[str, Any]]:
         """Dapatkan email dengan fallback otomatis jika service gagal"""
