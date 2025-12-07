@@ -4717,6 +4717,31 @@
           "name": "Busan",
           "lat": 35.1796,
           "lon": 129.0756
+        },
+        {
+          "name": "Incheon",
+          "lat": 37.4563,
+          "lon": 126.7052
+        },
+        {
+          "name": "Daegu",
+          "lat": 35.8714,
+          "lon": 128.6014
+        },
+        {
+          "name": "Daejeon",
+          "lat": 36.3504,
+          "lon": 127.3845
+        },
+        {
+          "name": "Gwangju",
+          "lat": 35.1595,
+          "lon": 126.8526
+        },
+        {
+          "name": "Ulsan",
+          "lat": 35.5384,
+          "lon": 129.3114
         }
       ],
       "devices": {
@@ -5250,6 +5275,26 @@
           "name": "Singapore",
           "lat": 1.3521,
           "lon": 103.8198
+        },
+        {
+          "name": "Jurong",
+          "lat": 1.3437,
+          "lon": 103.7066
+        },
+        {
+          "name": "Tampines",
+          "lat": 1.354,
+          "lon": 103.9444
+        },
+        {
+          "name": "Woodlands",
+          "lat": 1.4382,
+          "lon": 103.789
+        },
+        {
+          "name": "Sengkang",
+          "lat": 1.3916,
+          "lon": 103.8954
         }
       ],
       "devices": {
@@ -5835,6 +5880,26 @@
           "name": "Rotterdam",
           "lat": 51.9244,
           "lon": 4.4777
+        },
+        {
+          "name": "The Hague",
+          "lat": 52.0705,
+          "lon": 4.3007
+        },
+        {
+          "name": "Utrecht",
+          "lat": 52.0907,
+          "lon": 5.1214
+        },
+        {
+          "name": "Eindhoven",
+          "lat": 51.4416,
+          "lon": 5.4697
+        },
+        {
+          "name": "Groningen",
+          "lat": 53.2194,
+          "lon": 6.5665
         }
       ],
       "devices": {
@@ -6384,6 +6449,21 @@
           "name": "Wellington",
           "lat": -41.2865,
           "lon": 174.7762
+        },
+        {
+          "name": "Christchurch",
+          "lat": -43.5321,
+          "lon": 172.6362
+        },
+        {
+          "name": "Hamilton",
+          "lat": -37.787,
+          "lon": 175.2793
+        },
+        {
+          "name": "Dunedin",
+          "lat": -45.8788,
+          "lon": 170.5028
         }
       ],
       "devices": {
@@ -6902,6 +6982,36 @@
           "name": "Milan",
           "lat": 45.4642,
           "lon": 9.19
+        },
+        {
+          "name": "Naples",
+          "lat": 40.8518,
+          "lon": 14.2681
+        },
+        {
+          "name": "Turin",
+          "lat": 45.0703,
+          "lon": 7.6869
+        },
+        {
+          "name": "Florence",
+          "lat": 43.7696,
+          "lon": 11.2558
+        },
+        {
+          "name": "Venice",
+          "lat": 45.4408,
+          "lon": 12.3155
+        },
+        {
+          "name": "Bologna",
+          "lat": 44.4949,
+          "lon": 11.3426
+        },
+        {
+          "name": "Palermo",
+          "lat": 38.1157,
+          "lon": 13.3615
         }
       ],
       "devices": {
@@ -7437,6 +7547,36 @@
           "name": "Barcelona",
           "lat": 41.3851,
           "lon": 2.1734
+        },
+        {
+          "name": "Valencia",
+          "lat": 39.4699,
+          "lon": -0.3763
+        },
+        {
+          "name": "Seville",
+          "lat": 37.3891,
+          "lon": -5.9845
+        },
+        {
+          "name": "Zaragoza",
+          "lat": 41.6488,
+          "lon": -0.8891
+        },
+        {
+          "name": "M\u00e1laga",
+          "lat": 36.7213,
+          "lon": -4.4214
+        },
+        {
+          "name": "Murcia",
+          "lat": 37.9922,
+          "lon": -1.1307
+        },
+        {
+          "name": "Bilbao",
+          "lat": 43.263,
+          "lon": -2.935
         }
       ],
       "devices": {
@@ -7972,6 +8112,36 @@
           "name": "Guadalajara",
           "lat": 20.6597,
           "lon": -103.3496
+        },
+        {
+          "name": "Monterrey",
+          "lat": 25.6866,
+          "lon": -100.3161
+        },
+        {
+          "name": "Puebla",
+          "lat": 19.0414,
+          "lon": -98.2063
+        },
+        {
+          "name": "Tijuana",
+          "lat": 32.5149,
+          "lon": -117.0382
+        },
+        {
+          "name": "Le\u00f3n",
+          "lat": 21.125,
+          "lon": -101.686
+        },
+        {
+          "name": "Quer\u00e9taro",
+          "lat": 20.5888,
+          "lon": -100.3899
+        },
+        {
+          "name": "Canc\u00fan",
+          "lat": 21.1619,
+          "lon": -86.8515
         }
       ],
       "devices": {
@@ -8517,6 +8687,46 @@
           "name": "Rio de Janeiro",
           "lat": -22.9068,
           "lon": -43.1729
+        },
+        {
+          "name": "Bras\u00edlia",
+          "lat": -15.8267,
+          "lon": -47.9218
+        },
+        {
+          "name": "Salvador",
+          "lat": -12.9714,
+          "lon": -38.5014
+        },
+        {
+          "name": "Fortaleza",
+          "lat": -3.7172,
+          "lon": -38.5433
+        },
+        {
+          "name": "Belo Horizonte",
+          "lat": -19.9167,
+          "lon": -43.9345
+        },
+        {
+          "name": "Manaus",
+          "lat": -3.119,
+          "lon": -60.0217
+        },
+        {
+          "name": "Curitiba",
+          "lat": -25.4284,
+          "lon": -49.2733
+        },
+        {
+          "name": "Recife",
+          "lat": -8.0476,
+          "lon": -34.877
+        },
+        {
+          "name": "Porto Alegre",
+          "lat": -30.0346,
+          "lon": -51.2177
         }
       ],
       "devices": {
@@ -9003,6 +9213,31 @@
           "name": "Chiang Mai",
           "lat": 18.7883,
           "lon": 98.9853
+        },
+        {
+          "name": "Phuket",
+          "lat": 7.8804,
+          "lon": 98.3923
+        },
+        {
+          "name": "Pattaya",
+          "lat": 12.9236,
+          "lon": 100.8825
+        },
+        {
+          "name": "Chonburi",
+          "lat": 13.3611,
+          "lon": 100.9847
+        },
+        {
+          "name": "Hat Yai",
+          "lat": 7.01,
+          "lon": 100.467
+        },
+        {
+          "name": "Nakhon Ratchasima",
+          "lat": 14.9799,
+          "lon": 102.0977
         }
       ],
       "devices": {
@@ -9585,6 +9820,31 @@
           "name": "Penang",
           "lat": 5.4164,
           "lon": 100.3327
+        },
+        {
+          "name": "Johor Bahru",
+          "lat": 1.4927,
+          "lon": 103.7414
+        },
+        {
+          "name": "Ipoh",
+          "lat": 4.5975,
+          "lon": 101.0901
+        },
+        {
+          "name": "Shah Alam",
+          "lat": 3.0738,
+          "lon": 101.5183
+        },
+        {
+          "name": "Petaling Jaya",
+          "lat": 3.1074,
+          "lon": 101.6067
+        },
+        {
+          "name": "Kota Kinabalu",
+          "lat": 5.9804,
+          "lon": 116.0735
         }
       ],
       "devices": {
@@ -10122,6 +10382,36 @@
           "name": "Cebu City",
           "lat": 10.3157,
           "lon": 123.8854
+        },
+        {
+          "name": "Davao City",
+          "lat": 7.1907,
+          "lon": 125.4553
+        },
+        {
+          "name": "Quezon City",
+          "lat": 14.676,
+          "lon": 121.0437
+        },
+        {
+          "name": "Makati",
+          "lat": 14.5547,
+          "lon": 121.0244
+        },
+        {
+          "name": "Pasig",
+          "lat": 14.5764,
+          "lon": 121.0851
+        },
+        {
+          "name": "Taguig",
+          "lat": 14.5176,
+          "lon": 121.0509
+        },
+        {
+          "name": "Caloocan",
+          "lat": 14.6506,
+          "lon": 120.9822
         }
       ],
       "devices": {
@@ -10662,6 +10952,36 @@
           "name": "Hanoi",
           "lat": 21.0278,
           "lon": 105.8342
+        },
+        {
+          "name": "Da Nang",
+          "lat": 16.0544,
+          "lon": 108.2022
+        },
+        {
+          "name": "Hai Phong",
+          "lat": 20.8449,
+          "lon": 106.6881
+        },
+        {
+          "name": "Can Tho",
+          "lat": 10.0452,
+          "lon": 105.7469
+        },
+        {
+          "name": "Bien Hoa",
+          "lat": 10.9522,
+          "lon": 106.8227
+        },
+        {
+          "name": "Nha Trang",
+          "lat": 12.2388,
+          "lon": 109.1967
+        },
+        {
+          "name": "Hue",
+          "lat": 16.4637,
+          "lon": 107.5909
         }
       ],
       "devices": {
@@ -11216,6 +11536,46 @@
           "name": "Delhi",
           "lat": 28.7041,
           "lon": 77.1025
+        },
+        {
+          "name": "Bangalore",
+          "lat": 12.9716,
+          "lon": 77.5946
+        },
+        {
+          "name": "Hyderabad",
+          "lat": 17.385,
+          "lon": 78.4867
+        },
+        {
+          "name": "Chennai",
+          "lat": 13.0827,
+          "lon": 80.2707
+        },
+        {
+          "name": "Pune",
+          "lat": 18.5204,
+          "lon": 73.8567
+        },
+        {
+          "name": "Ahmedabad",
+          "lat": 23.0225,
+          "lon": 72.5714
+        },
+        {
+          "name": "Kolkata",
+          "lat": 22.5726,
+          "lon": 88.3639
+        },
+        {
+          "name": "Surat",
+          "lat": 21.1702,
+          "lon": 72.8311
+        },
+        {
+          "name": "Jaipur",
+          "lat": 26.9124,
+          "lon": 75.7873
         }
       ],
       "devices": {
@@ -12952,6 +13312,31 @@
           "name": "Rosario",
           "lat": -32.9442,
           "lon": -60.6505
+        },
+        {
+          "name": "Mendoza",
+          "lat": -32.8908,
+          "lon": -68.8272
+        },
+        {
+          "name": "La Plata",
+          "lat": -34.9205,
+          "lon": -57.9536
+        },
+        {
+          "name": "Mar del Plata",
+          "lat": -38.0055,
+          "lon": -57.5426
+        },
+        {
+          "name": "Salta",
+          "lat": -24.7859,
+          "lon": -65.4117
+        },
+        {
+          "name": "San Juan",
+          "lat": -31.5375,
+          "lon": -68.5364
         }
       ],
       "devices": {
@@ -13593,6 +13978,21 @@
           "name": "Valpara\u00edso",
           "lat": -33.0472,
           "lon": -71.6127
+        },
+        {
+          "name": "Concepci\u00f3n",
+          "lat": -36.827,
+          "lon": -73.0498
+        },
+        {
+          "name": "La Serena",
+          "lat": -29.9027,
+          "lon": -71.2519
+        },
+        {
+          "name": "Temuco",
+          "lat": -38.7359,
+          "lon": -72.5904
         }
       ],
       "devices": {
@@ -14295,6 +14695,21 @@
           "name": "Cali",
           "lat": 3.4516,
           "lon": -76.532
+        },
+        {
+          "name": "Barranquilla",
+          "lat": 10.9639,
+          "lon": -74.7964
+        },
+        {
+          "name": "Cartagena",
+          "lat": 10.391,
+          "lon": -75.4794
+        },
+        {
+          "name": "Bucaramanga",
+          "lat": 7.1254,
+          "lon": -73.1198
         }
       ],
       "devices": {
@@ -14814,6 +15229,21 @@
           "name": "Arequipa",
           "lat": -16.409,
           "lon": -71.5375
+        },
+        {
+          "name": "Cusco",
+          "lat": -13.5319,
+          "lon": -71.9675
+        },
+        {
+          "name": "Trujillo",
+          "lat": -8.116,
+          "lon": -79.0293
+        },
+        {
+          "name": "Chiclayo",
+          "lat": -6.7714,
+          "lon": -79.8391
         }
       ],
       "devices": {
@@ -15351,6 +15781,21 @@
           "name": "Porto",
           "lat": 41.1579,
           "lon": -8.6291
+        },
+        {
+          "name": "Braga",
+          "lat": 41.5518,
+          "lon": -8.4229
+        },
+        {
+          "name": "Coimbra",
+          "lat": 40.2033,
+          "lon": -8.4103
+        },
+        {
+          "name": "Funchal",
+          "lat": 32.6669,
+          "lon": -16.9241
         }
       ],
       "devices": {
@@ -16011,6 +16456,21 @@
           "name": "Antwerp",
           "lat": 51.2194,
           "lon": 4.4025
+        },
+        {
+          "name": "Ghent",
+          "lat": 51.0543,
+          "lon": 3.7174
+        },
+        {
+          "name": "Charleroi",
+          "lat": 50.4108,
+          "lon": 4.4446
+        },
+        {
+          "name": "Li\u00e8ge",
+          "lat": 50.6326,
+          "lon": 5.5797
         }
       ],
       "devices": {
@@ -16717,6 +17177,16 @@
           "name": "Basel",
           "lat": 47.5596,
           "lon": 7.5886
+        },
+        {
+          "name": "Bern",
+          "lat": 46.948,
+          "lon": 7.4474
+        },
+        {
+          "name": "Lausanne",
+          "lat": 46.5197,
+          "lon": 6.6323
         }
       ],
       "devices": {
@@ -17251,6 +17721,21 @@
           "name": "Graz",
           "lat": 47.0707,
           "lon": 15.4395
+        },
+        {
+          "name": "Salzburg",
+          "lat": 47.8095,
+          "lon": 13.055
+        },
+        {
+          "name": "Innsbruck",
+          "lat": 47.2692,
+          "lon": 11.4041
+        },
+        {
+          "name": "Linz",
+          "lat": 48.3064,
+          "lon": 14.2861
         }
       ],
       "devices": {
@@ -18070,6 +18555,31 @@
           "name": "Wroclaw",
           "lat": 51.1079,
           "lon": 17.0385
+        },
+        {
+          "name": "Gda\u0144sk",
+          "lat": 54.352,
+          "lon": 18.6466
+        },
+        {
+          "name": "Pozna\u0144",
+          "lat": 52.4064,
+          "lon": 16.9252
+        },
+        {
+          "name": "\u0141\u00f3d\u017a",
+          "lat": 51.7592,
+          "lon": 19.456
+        },
+        {
+          "name": "Szczecin",
+          "lat": 53.4285,
+          "lon": 14.5528
+        },
+        {
+          "name": "Lublin",
+          "lat": 51.2465,
+          "lon": 22.5684
         }
       ],
       "devices": {
@@ -18693,6 +19203,16 @@
           "name": "Malm\u00f6",
           "lat": 55.6049,
           "lon": 13.0038
+        },
+        {
+          "name": "Uppsala",
+          "lat": 59.8586,
+          "lon": 17.6389
+        },
+        {
+          "name": "V\u00e4ster\u00e5s",
+          "lat": 59.6099,
+          "lon": 16.5448
         }
       ],
       "devices": {
@@ -19264,6 +19784,21 @@
           "name": "Bergen",
           "lat": 60.3913,
           "lon": 5.3221
+        },
+        {
+          "name": "Trondheim",
+          "lat": 63.4305,
+          "lon": 10.3951
+        },
+        {
+          "name": "Stavanger",
+          "lat": 58.97,
+          "lon": 5.7331
+        },
+        {
+          "name": "Troms\u00f8",
+          "lat": 69.6492,
+          "lon": 18.9553
         }
       ],
       "devices": {
@@ -19836,6 +20371,21 @@
           "name": "Aarhus",
           "lat": 56.1629,
           "lon": 10.2039
+        },
+        {
+          "name": "Odense",
+          "lat": 55.4038,
+          "lon": 10.4024
+        },
+        {
+          "name": "Aalborg",
+          "lat": 57.0488,
+          "lon": 9.9217
+        },
+        {
+          "name": "Esbjerg",
+          "lat": 55.4667,
+          "lon": 8.45
         }
       ],
       "devices": {
@@ -20391,6 +20941,21 @@
           "name": "Guangzhou",
           "lat": 23.1291,
           "lon": 113.2644
+        },
+        {
+          "name": "Chengdu",
+          "lat": 30.5728,
+          "lon": 104.0668
+        },
+        {
+          "name": "Hangzhou",
+          "lat": 30.2741,
+          "lon": 120.1551
+        },
+        {
+          "name": "Wuhan",
+          "lat": 30.5928,
+          "lon": 114.3055
         }
       ],
       "devices": {
@@ -21635,6 +22200,21 @@
           "name": "Kowloon",
           "lat": 22.3271,
           "lon": 114.1781
+        },
+        {
+          "name": "Tsuen Wan",
+          "lat": 22.3686,
+          "lon": 114.1086
+        },
+        {
+          "name": "Sha Tin",
+          "lat": 22.3825,
+          "lon": 114.1952
+        },
+        {
+          "name": "Tuen Mun",
+          "lat": 22.3914,
+          "lon": 113.9778
         }
       ],
       "devices": {
@@ -22282,6 +22862,16 @@
           "name": "Islamabad",
           "lat": 33.6844,
           "lon": 73.0479
+        },
+        {
+          "name": "Faisalabad",
+          "lat": 31.4504,
+          "lon": 73.135
+        },
+        {
+          "name": "Rawalpindi",
+          "lat": 33.5651,
+          "lon": 73.0169
         }
       ],
       "devices": {
@@ -23802,6 +24392,31 @@
           "name": "Izmir",
           "lat": 38.4237,
           "lon": 27.1428
+        },
+        {
+          "name": "Antalya",
+          "lat": 36.8969,
+          "lon": 30.7133
+        },
+        {
+          "name": "Bursa",
+          "lat": 40.1826,
+          "lon": 29.0665
+        },
+        {
+          "name": "Adana",
+          "lat": 37.0,
+          "lon": 35.3213
+        },
+        {
+          "name": "Gaziantep",
+          "lat": 37.0662,
+          "lon": 37.3833
+        },
+        {
+          "name": "Konya",
+          "lat": 37.8667,
+          "lon": 32.4833
         }
       ],
       "devices": {
@@ -24447,6 +25062,16 @@
           "name": "Haifa",
           "lat": 32.794,
           "lon": 34.9896
+        },
+        {
+          "name": "Beer Sheva",
+          "lat": 31.2518,
+          "lon": 34.7913
+        },
+        {
+          "name": "Netanya",
+          "lat": 32.3328,
+          "lon": 34.8556
         }
       ],
       "devices": {
@@ -24602,6 +25227,16 @@
           "name": "Sylhet",
           "lat": 24.8949,
           "lon": 91.8687
+        },
+        {
+          "name": "Rajshahi",
+          "lat": 24.3636,
+          "lon": 88.6241
+        },
+        {
+          "name": "Comilla",
+          "lat": 23.4607,
+          "lon": 91.1809
         }
       ],
       "isps": {
@@ -25148,6 +25783,16 @@
           "name": "Galle",
           "lat": 6.0535,
           "lon": 80.221
+        },
+        {
+          "name": "Jaffna",
+          "lat": 9.6615,
+          "lon": 80.0255
+        },
+        {
+          "name": "Negombo",
+          "lat": 7.2083,
+          "lon": 79.8358
         }
       ],
       "isps": {
@@ -25598,6 +26243,16 @@
           "name": "Naypyidaw",
           "lat": 19.7633,
           "lon": 96.0785
+        },
+        {
+          "name": "Mawlamyine",
+          "lat": 16.485,
+          "lon": 97.6256
+        },
+        {
+          "name": "Bago",
+          "lat": 17.3281,
+          "lon": 96.4802
         }
       ],
       "isps": {
@@ -26036,6 +26691,16 @@
           "name": "Battambang",
           "lat": 13.0957,
           "lon": 103.2022
+        },
+        {
+          "name": "Kampong Cham",
+          "lat": 11.9934,
+          "lon": 105.4637
+        },
+        {
+          "name": "Kampot",
+          "lat": 10.6167,
+          "lon": 104.1833
         }
       ],
       "isps": {
@@ -26457,6 +27122,21 @@
           "name": "Luang Prabang",
           "lat": 19.8845,
           "lon": 102.1348
+        },
+        {
+          "name": "Pakse",
+          "lat": 15.1202,
+          "lon": 105.7996
+        },
+        {
+          "name": "Savannakhet",
+          "lat": 16.5569,
+          "lon": 104.7511
+        },
+        {
+          "name": "Thakhek",
+          "lat": 17.4081,
+          "lon": 104.7996
         }
       ],
       "isps": {
@@ -26774,6 +27454,21 @@
           "name": "Pokhara",
           "lat": 28.2096,
           "lon": 83.9856
+        },
+        {
+          "name": "Lalitpur",
+          "lat": 27.6667,
+          "lon": 85.3167
+        },
+        {
+          "name": "Bhaktapur",
+          "lat": 27.6722,
+          "lon": 85.4288
+        },
+        {
+          "name": "Biratnagar",
+          "lat": 26.4833,
+          "lon": 87.2833
         }
       ],
       "isps": {
@@ -27091,6 +27786,26 @@
           "name": "Ulaanbaatar",
           "lat": 47.8864,
           "lon": 106.9057
+        },
+        {
+          "name": "Erdenet",
+          "lat": 49.0333,
+          "lon": 104.0833
+        },
+        {
+          "name": "Darkhan",
+          "lat": 49.4667,
+          "lon": 105.9667
+        },
+        {
+          "name": "Choibalsan",
+          "lat": 48.0833,
+          "lon": 114.5167
+        },
+        {
+          "name": "Khovd",
+          "lat": 48.0056,
+          "lon": 91.6419
         }
       ],
       "isps": {
@@ -27406,6 +28121,16 @@
           "name": "Shymkent",
           "lat": 42.3,
           "lon": 69.6
+        },
+        {
+          "name": "Karaganda",
+          "lat": 49.8047,
+          "lon": 73.1094
+        },
+        {
+          "name": "Aktobe",
+          "lat": 50.2839,
+          "lon": 57.167
         }
       ],
       "isps": {
@@ -27839,6 +28564,21 @@
           "name": "Samarkand",
           "lat": 39.627,
           "lon": 66.975
+        },
+        {
+          "name": "Bukhara",
+          "lat": 39.7747,
+          "lon": 64.4286
+        },
+        {
+          "name": "Andijan",
+          "lat": 40.7821,
+          "lon": 72.3442
+        },
+        {
+          "name": "Namangan",
+          "lat": 40.9983,
+          "lon": 71.6726
         }
       ],
       "isps": {
@@ -28148,6 +28888,26 @@
           "name": "Bishkek",
           "lat": 42.8746,
           "lon": 74.5698
+        },
+        {
+          "name": "Osh",
+          "lat": 40.5283,
+          "lon": 72.7985
+        },
+        {
+          "name": "Jalal-Abad",
+          "lat": 40.9333,
+          "lon": 72.9833
+        },
+        {
+          "name": "Karakol",
+          "lat": 42.4908,
+          "lon": 78.3933
+        },
+        {
+          "name": "Tokmok",
+          "lat": 42.8417,
+          "lon": 75.2917
         }
       ],
       "isps": {
@@ -28458,6 +29218,21 @@
           "name": "Irbid",
           "lat": 32.5569,
           "lon": 35.8469
+        },
+        {
+          "name": "Zarqa",
+          "lat": 32.0607,
+          "lon": 36.0987
+        },
+        {
+          "name": "Aqaba",
+          "lat": 29.5269,
+          "lon": 35.0077
+        },
+        {
+          "name": "Madaba",
+          "lat": 31.7167,
+          "lon": 35.7925
         }
       ],
       "isps": {
@@ -28777,6 +29552,21 @@
           "name": "Salalah",
           "lat": 17.015,
           "lon": 54.0924
+        },
+        {
+          "name": "Sohar",
+          "lat": 24.3472,
+          "lon": 56.7494
+        },
+        {
+          "name": "Nizwa",
+          "lat": 22.9333,
+          "lon": 57.5333
+        },
+        {
+          "name": "Sur",
+          "lat": 22.5667,
+          "lon": 59.5289
         }
       ],
       "isps": {
@@ -29097,6 +29887,26 @@
           "name": "Kuwait City",
           "lat": 29.3759,
           "lon": 47.9774
+        },
+        {
+          "name": "Hawalli",
+          "lat": 29.3332,
+          "lon": 48.0289
+        },
+        {
+          "name": "Salmiya",
+          "lat": 29.3336,
+          "lon": 48.0631
+        },
+        {
+          "name": "Farwaniya",
+          "lat": 29.2775,
+          "lon": 47.9586
+        },
+        {
+          "name": "Jahra",
+          "lat": 29.3375,
+          "lon": 47.6581
         }
       ],
       "isps": {
@@ -29422,6 +30232,26 @@
           "name": "Manama",
           "lat": 26.2285,
           "lon": 50.586
+        },
+        {
+          "name": "Muharraq",
+          "lat": 26.2572,
+          "lon": 50.6129
+        },
+        {
+          "name": "Riffa",
+          "lat": 26.13,
+          "lon": 50.555
+        },
+        {
+          "name": "Hamad Town",
+          "lat": 26.1146,
+          "lon": 50.507
+        },
+        {
+          "name": "Isa Town",
+          "lat": 26.1736,
+          "lon": 50.5479
         }
       ],
       "isps": {
@@ -29731,6 +30561,26 @@
           "name": "Doha",
           "lat": 25.2854,
           "lon": 51.531
+        },
+        {
+          "name": "Al Rayyan",
+          "lat": 25.2919,
+          "lon": 51.4244
+        },
+        {
+          "name": "Umm Salal",
+          "lat": 25.4139,
+          "lon": 51.3944
+        },
+        {
+          "name": "Al Wakrah",
+          "lat": 25.1714,
+          "lon": 51.6025
+        },
+        {
+          "name": "Al Khor",
+          "lat": 25.6806,
+          "lon": 51.4969
         }
       ],
       "isps": {
@@ -30060,6 +30910,26 @@
           "name": "Yerevan",
           "lat": 40.1872,
           "lon": 44.5152
+        },
+        {
+          "name": "Gyumri",
+          "lat": 40.7894,
+          "lon": 43.8475
+        },
+        {
+          "name": "Vanadzor",
+          "lat": 40.814,
+          "lon": 44.4882
+        },
+        {
+          "name": "Vagharshapat",
+          "lat": 40.1611,
+          "lon": 44.2936
+        },
+        {
+          "name": "Hrazdan",
+          "lat": 40.4978,
+          "lon": 44.7664
         }
       ],
       "isps": {
@@ -30365,6 +31235,26 @@
           "name": "Batumi",
           "lat": 41.6168,
           "lon": 41.6367
+        },
+        {
+          "name": "Kutaisi",
+          "lat": 42.2679,
+          "lon": 42.6986
+        },
+        {
+          "name": "Rustavi",
+          "lat": 41.5495,
+          "lon": 44.995
+        },
+        {
+          "name": "Zugdidi",
+          "lat": 42.5088,
+          "lon": 41.8708
+        },
+        {
+          "name": "Gori",
+          "lat": 41.9844,
+          "lon": 44.1086
         }
       ],
       "isps": {
@@ -30674,6 +31564,26 @@
           "name": "Baku",
           "lat": 40.4093,
           "lon": 49.8671
+        },
+        {
+          "name": "Ganja",
+          "lat": 40.6828,
+          "lon": 46.3606
+        },
+        {
+          "name": "Sumgait",
+          "lat": 40.5897,
+          "lon": 49.6686
+        },
+        {
+          "name": "Mingachevir",
+          "lat": 40.7697,
+          "lon": 47.0497
+        },
+        {
+          "name": "Lankaran",
+          "lat": 38.7536,
+          "lon": 48.8508
         }
       ],
       "isps": {
@@ -30988,6 +31898,26 @@
           "name": "Bandar Seri Begawan",
           "lat": 4.9031,
           "lon": 114.9398
+        },
+        {
+          "name": "Kuala Belait",
+          "lat": 4.5833,
+          "lon": 114.2333
+        },
+        {
+          "name": "Seria",
+          "lat": 4.6074,
+          "lon": 114.3244
+        },
+        {
+          "name": "Tutong",
+          "lat": 4.8078,
+          "lon": 114.6622
+        },
+        {
+          "name": "Bangar",
+          "lat": 4.7036,
+          "lon": 115.0758
         }
       ],
       "isps": {
@@ -31282,6 +32212,26 @@
           "name": "Mal\u00e9",
           "lat": 4.1755,
           "lon": 73.5093
+        },
+        {
+          "name": "Addu City",
+          "lat": -0.6291,
+          "lon": 73.1578
+        },
+        {
+          "name": "Fuvahmulah",
+          "lat": -0.2981,
+          "lon": 73.425
+        },
+        {
+          "name": "Kulhudhuffushi",
+          "lat": 6.6222,
+          "lon": 73.0703
+        },
+        {
+          "name": "Hithadhoo",
+          "lat": -0.6,
+          "lon": 73.0833
         }
       ],
       "isps": {
