@@ -4907,6 +4907,11 @@ class UltraStealthIPGenerator2025:
         
         return base
     
+    def _generate_device_profile_for_country(self, selected_device: str, country: str, ip_type: str) -> Dict[str, Any]:
+        """Generate device profile for country - wrapper method"""
+        is_mobile = (ip_type == "mobile")
+        return self._generate_device_fingerprint(country, is_mobile)
+    
     def _generate_device_fingerprint(self, country: str, is_mobile: bool) -> Dict[str, Any]:
         """Generate device fingerprint based on country and connection type"""
         
