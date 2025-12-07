@@ -1,0 +1,782 @@
+{
+  "version": "2025.1",
+  "last_updated": "2025-01-07",
+  "description": "Comprehensive country database with IP ranges, ISPs, cities, devices, and languages",
+  "countries": {
+    "US": {
+      "name": "United States",
+      "language": "en-US",
+      "timezone": "America/New_York",
+      "locale": "en_US",
+      "currency": "USD",
+      "phone_code": "+1",
+      "isps": {
+        "mobile": {
+          "Verizon": {
+            "name": "Verizon Wireless",
+            "asn": "AS701",
+            "ranges": [
+              "66.174.0.0/16", "70.192.0.0/11", "75.0.0.0/9",
+              "97.128.0.0/9", "108.6.0.0/15", "173.192.0.0/10"
+            ]
+          },
+          "AT&T": {
+            "name": "AT&T Mobility",
+            "asn": "AS7018",
+            "ranges": [
+              "12.0.0.0/9", "23.0.0.0/12", "67.0.0.0/10",
+              "99.0.0.0/11", "107.0.0.0/10", "166.0.0.0/11"
+            ]
+          },
+          "T-Mobile": {
+            "name": "T-Mobile USA",
+            "asn": "AS21928",
+            "ranges": [
+              "172.0.0.0/12", "208.54.0.0/16", "216.155.0.0/16"
+            ]
+          }
+        },
+        "broadband": {
+          "Comcast": {
+            "name": "Comcast Cable",
+            "asn": "AS7922",
+            "ranges": [
+              "50.128.0.0/9", "68.32.0.0/11", "73.0.0.0/9",
+              "96.0.0.0/9", "98.192.0.0/10", "174.48.0.0/12"
+            ]
+          },
+          "Spectrum": {
+            "name": "Charter Communications",
+            "asn": "AS20115",
+            "ranges": [
+              "24.0.0.0/11", "65.0.0.0/10", "76.0.0.0/8",
+              "174.0.0.0/12"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "New York", "lat": 40.7128, "lon": -74.0060},
+        {"name": "Los Angeles", "lat": 34.0522, "lon": -118.2437},
+        {"name": "Chicago", "lat": 41.8781, "lon": -87.6298},
+        {"name": "Houston", "lat": 29.7604, "lon": -95.3698},
+        {"name": "Phoenix", "lat": 33.4484, "lon": -112.0740},
+        {"name": "Philadelphia", "lat": 39.9526, "lon": -75.1652},
+        {"name": "San Antonio", "lat": 29.4241, "lon": -98.4936},
+        {"name": "San Diego", "lat": 32.7157, "lon": -117.1611},
+        {"name": "Dallas", "lat": 32.7767, "lon": -96.7970},
+        {"name": "San Jose", "lat": 37.3382, "lon": -121.8863},
+        {"name": "Miami", "lat": 25.7617, "lon": -80.1918},
+        {"name": "Seattle", "lat": 47.6062, "lon": -122.3321},
+        {"name": "Boston", "lat": 42.3601, "lon": -71.0589},
+        {"name": "Denver", "lat": 39.7392, "lon": -104.9903},
+        {"name": "Atlanta", "lat": 33.7490, "lon": -84.3880}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro",
+          "Samsung Galaxy S24 Ultra", "Samsung Galaxy S24+", "Samsung Galaxy S24",
+          "Google Pixel 8 Pro", "Google Pixel 8", "Google Pixel 7 Pro",
+          "OnePlus 12", "Motorola Edge+", "Galaxy Z Fold5", "Galaxy Z Flip5"
+        ],
+        "desktop": [
+          "MacBook Pro 16-inch M3", "MacBook Pro 14-inch M3", "MacBook Air M3",
+          "Dell XPS 15", "HP Spectre x360", "Lenovo ThinkPad X1", "Surface Laptop 5"
+        ]
+      }
+    },
+    "ID": {
+      "name": "Indonesia",
+      "language": "id-ID",
+      "timezone": "Asia/Jakarta",
+      "locale": "id_ID",
+      "currency": "IDR",
+      "phone_code": "+62",
+      "isps": {
+        "mobile": {
+          "telkomsel": {
+            "name": "Telkomsel",
+            "asn": "AS7713",
+            "ranges": [
+              "114.120.0.0/13", "114.124.0.0/14", "182.0.0.0/12",
+              "36.64.0.0/11", "36.80.0.0/12", "110.136.0.0/13",
+              "118.136.0.0/14", "139.192.0.0/11", "180.244.0.0/14"
+            ]
+          },
+          "indosat": {
+            "name": "Indosat Ooredoo",
+            "asn": "AS4761",
+            "ranges": [
+              "114.0.0.0/13", "114.4.0.0/14", "180.240.0.0/12",
+              "202.152.0.0/14", "125.160.0.0/12", "112.215.0.0/16"
+            ]
+          },
+          "xl": {
+            "name": "XL Axiata",
+            "asn": "AS24203",
+            "ranges": [
+              "112.215.0.0/16", "103.10.66.0/24", "36.92.0.0/14"
+            ]
+          },
+          "tri": {
+            "name": "Tri Indonesia",
+            "asn": "AS45727",
+            "ranges": [
+              "114.79.0.0/16", "182.253.0.0/16", "114.142.0.0/16",
+              "114.125.0.0/16", "103.47.132.0/22"
+            ]
+          }
+        },
+        "broadband": {
+          "indihome": {
+            "name": "IndiHome",
+            "asn": "AS7713",
+            "ranges": [
+              "180.241.0.0/16", "180.242.0.0/15", "180.244.0.0/14",
+              "180.248.0.0/13", "182.1.0.0/16", "182.2.0.0/15"
+            ]
+          },
+          "biznet": {
+            "name": "Biznet",
+            "asn": "AS17451",
+            "ranges": [
+              "103.28.52.0/22", "202.169.32.0/19", "118.99.0.0/16",
+              "103.78.0.0/16", "117.102.0.0/16"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Jakarta", "lat": -6.2088, "lon": 106.8456},
+        {"name": "Surabaya", "lat": -7.2575, "lon": 112.7521},
+        {"name": "Bandung", "lat": -6.9175, "lon": 107.6191},
+        {"name": "Medan", "lat": 3.5952, "lon": 98.6722},
+        {"name": "Semarang", "lat": -6.9932, "lon": 110.4203},
+        {"name": "Makassar", "lat": -5.1477, "lon": 119.4327},
+        {"name": "Palembang", "lat": -2.9761, "lon": 104.7754},
+        {"name": "Tangerang", "lat": -6.1783, "lon": 106.6319},
+        {"name": "Depok", "lat": -6.4025, "lon": 106.7942},
+        {"name": "Bekasi", "lat": -6.2349, "lon": 106.9896}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy A54", "Samsung Galaxy A34", "Samsung Galaxy S23",
+          "Oppo Reno 10", "Vivo V29", "Xiaomi Redmi Note 13", "Realme 11 Pro",
+          "iPhone 13", "iPhone 14", "Poco X6"
+        ],
+        "desktop": [
+          "Asus VivoBook", "Lenovo IdeaPad", "HP Pavilion", "Acer Aspire",
+          "Dell Inspiron", "MSI Modern"
+        ]
+      }
+    },
+    "GB": {
+      "name": "United Kingdom",
+      "language": "en-GB",
+      "timezone": "Europe/London",
+      "locale": "en_GB",
+      "currency": "GBP",
+      "phone_code": "+44",
+      "isps": {
+        "mobile": {
+          "EE": {
+            "name": "EE Limited",
+            "asn": "AS12576",
+            "ranges": [
+              "2.24.0.0/13", "5.80.0.0/12", "31.52.0.0/14"
+            ]
+          },
+          "O2": {
+            "name": "Telefonica UK",
+            "asn": "AS12430",
+            "ranges": [
+              "82.132.0.0/14", "86.128.0.0/11", "92.40.0.0/13"
+            ]
+          },
+          "Vodafone": {
+            "name": "Vodafone UK",
+            "asn": "AS1273",
+            "ranges": [
+              "90.192.0.0/10", "109.144.0.0/12", "185.0.0.0/16"
+            ]
+          }
+        },
+        "broadband": {
+          "BT": {
+            "name": "BT Group",
+            "asn": "AS2856",
+            "ranges": [
+              "81.96.0.0/12", "81.128.0.0/13", "82.0.0.0/11"
+            ]
+          },
+          "Sky": {
+            "name": "Sky Broadband",
+            "asn": "AS5607",
+            "ranges": [
+              "78.144.0.0/12", "90.192.0.0/11", "212.159.0.0/16"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "London", "lat": 51.5074, "lon": -0.1278},
+        {"name": "Manchester", "lat": 53.4808, "lon": -2.2426},
+        {"name": "Birmingham", "lat": 52.4862, "lon": -1.8904},
+        {"name": "Leeds", "lat": 53.8008, "lon": -1.5491},
+        {"name": "Liverpool", "lat": 53.4084, "lon": -2.9916},
+        {"name": "Bristol", "lat": 51.4545, "lon": -2.5879},
+        {"name": "Sheffield", "lat": 53.3811, "lon": -1.4701},
+        {"name": "Edinburgh", "lat": 55.9533, "lon": -3.1883}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro", "Samsung Galaxy S24",
+          "Samsung Galaxy S23", "Google Pixel 8", "OnePlus 12"
+        ],
+        "desktop": [
+          "MacBook Pro M3", "MacBook Air M3", "Dell XPS 13", "HP Elite",
+          "Lenovo ThinkPad X1"
+        ]
+      }
+    },
+    "AU": {
+      "name": "Australia",
+      "language": "en-AU",
+      "timezone": "Australia/Sydney",
+      "locale": "en_AU",
+      "currency": "AUD",
+      "phone_code": "+61",
+      "isps": {
+        "mobile": {
+          "Telstra": {
+            "name": "Telstra Mobile",
+            "asn": "AS1221",
+            "ranges": [
+              "1.128.0.0/11", "27.0.0.0/10", "58.6.0.0/15",
+              "101.160.0.0/11", "110.20.0.0/14", "120.148.0.0/14"
+            ]
+          },
+          "Optus": {
+            "name": "Optus Mobile",
+            "asn": "AS4804",
+            "ranges": [
+              "1.0.0.0/12", "49.176.0.0/12", "58.96.0.0/12",
+              "101.0.0.0/12", "121.200.0.0/13"
+            ]
+          },
+          "Vodafone": {
+            "name": "Vodafone Australia",
+            "asn": "AS133612",
+            "ranges": [
+              "14.0.0.0/12", "27.112.0.0/12", "110.232.0.0/13"
+            ]
+          }
+        },
+        "broadband": {
+          "NBN": {
+            "name": "NBN Co",
+            "asn": "AS38285",
+            "ranges": [
+              "202.175.0.0/16", "203.0.0.0/13", "210.10.0.0/15"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Sydney", "lat": -33.8688, "lon": 151.2093},
+        {"name": "Melbourne", "lat": -37.8136, "lon": 144.9631},
+        {"name": "Brisbane", "lat": -27.4698, "lon": 153.0251},
+        {"name": "Perth", "lat": -31.9505, "lon": 115.8605},
+        {"name": "Adelaide", "lat": -34.9285, "lon": 138.6007},
+        {"name": "Gold Coast", "lat": -28.0167, "lon": 153.4000},
+        {"name": "Canberra", "lat": -35.2809, "lon": 149.1300}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro Max", "iPhone 15 Pro", "Samsung Galaxy S24 Ultra",
+          "Samsung Galaxy S24", "Google Pixel 8 Pro", "Oppo Find X6"
+        ],
+        "desktop": [
+          "MacBook Pro M3", "MacBook Air M3", "Dell XPS", "Surface Laptop 5"
+        ]
+      }
+    },
+    "CA": {
+      "name": "Canada",
+      "language": "en-CA",
+      "timezone": "America/Toronto",
+      "locale": "en_CA",
+      "currency": "CAD",
+      "phone_code": "+1",
+      "isps": {
+        "mobile": {
+          "Rogers": {
+            "name": "Rogers Wireless",
+            "asn": "AS812",
+            "ranges": [
+              "24.64.0.0/11", "64.71.0.0/16", "70.25.0.0/16",
+              "99.224.0.0/11", "142.0.0.0/12", "206.47.0.0/16"
+            ]
+          },
+          "Bell": {
+            "name": "Bell Mobility",
+            "asn": "AS855",
+            "ranges": [
+              "24.200.0.0/13", "64.228.0.0/14", "70.48.0.0/12",
+              "174.112.0.0/12", "184.144.0.0/12"
+            ]
+          },
+          "Telus": {
+            "name": "Telus Mobility",
+            "asn": "AS852",
+            "ranges": [
+              "23.16.0.0/12", "64.59.0.0/16", "66.183.0.0/16",
+              "142.161.0.0/16", "184.70.0.0/15"
+            ]
+          }
+        },
+        "broadband": {
+          "Shaw": {
+            "name": "Shaw Communications",
+            "asn": "AS6327",
+            "ranges": [
+              "24.64.0.0/11", "64.71.0.0/16", "69.159.0.0/16"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Toronto", "lat": 43.6532, "lon": -79.3832},
+        {"name": "Montreal", "lat": 45.5017, "lon": -73.5673},
+        {"name": "Vancouver", "lat": 49.2827, "lon": -123.1207},
+        {"name": "Calgary", "lat": 51.0447, "lon": -114.0719},
+        {"name": "Ottawa", "lat": 45.4215, "lon": -75.6972},
+        {"name": "Edmonton", "lat": 53.5461, "lon": -113.4938},
+        {"name": "Winnipeg", "lat": 49.8951, "lon": -97.1384}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro", "iPhone 15", "Samsung Galaxy S24", "Google Pixel 8",
+          "OnePlus 12", "Motorola Edge+"
+        ],
+        "desktop": [
+          "MacBook Pro M3", "Dell XPS 15", "HP Spectre", "Surface Laptop"
+        ]
+      }
+    },
+    "DE": {
+      "name": "Germany",
+      "language": "de-DE",
+      "timezone": "Europe/Berlin",
+      "locale": "de_DE",
+      "currency": "EUR",
+      "phone_code": "+49",
+      "isps": {
+        "mobile": {
+          "Telekom": {
+            "name": "Deutsche Telekom",
+            "asn": "AS3320",
+            "ranges": [
+              "80.128.0.0/12", "87.160.0.0/11", "91.0.0.0/12",
+              "217.0.0.0/13"
+            ]
+          },
+          "Vodafone": {
+            "name": "Vodafone Germany",
+            "asn": "AS3209",
+            "ranges": [
+              "80.152.0.0/13", "84.128.0.0/10", "89.0.0.0/11"
+            ]
+          },
+          "O2": {
+            "name": "O2 Germany",
+            "asn": "AS6805",
+            "ranges": [
+              "77.0.0.0/10", "78.48.0.0/12", "79.192.0.0/10"
+            ]
+          }
+        },
+        "broadband": {
+          "1&1": {
+            "name": "1&1 Internet",
+            "asn": "AS8560",
+            "ranges": [
+              "212.185.0.0/16", "217.72.0.0/13"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Berlin", "lat": 52.5200, "lon": 13.4050},
+        {"name": "Hamburg", "lat": 53.5511, "lon": 9.9937},
+        {"name": "Munich", "lat": 48.1351, "lon": 11.5820},
+        {"name": "Cologne", "lat": 50.9375, "lon": 6.9603},
+        {"name": "Frankfurt", "lat": 50.1109, "lon": 8.6821},
+        {"name": "Stuttgart", "lat": 48.7758, "lon": 9.1829},
+        {"name": "Düsseldorf", "lat": 51.2277, "lon": 6.7735}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy S24", "Samsung Galaxy S23", "iPhone 15 Pro",
+          "Google Pixel 8", "OnePlus 12", "Xiaomi 14"
+        ],
+        "desktop": [
+          "MacBook Pro", "Lenovo ThinkPad", "Dell XPS", "HP EliteBook"
+        ]
+      }
+    },
+    "FR": {
+      "name": "France",
+      "language": "fr-FR",
+      "timezone": "Europe/Paris",
+      "locale": "fr_FR",
+      "currency": "EUR",
+      "phone_code": "+33",
+      "isps": {
+        "mobile": {
+          "Orange": {
+            "name": "Orange France",
+            "asn": "AS3215",
+            "ranges": [
+              "80.10.0.0/15", "81.48.0.0/13", "86.192.0.0/11",
+              "90.0.0.0/11", "92.160.0.0/11"
+            ]
+          },
+          "SFR": {
+            "name": "SFR",
+            "asn": "AS21502",
+            "ranges": [
+              "109.0.0.0/10", "176.128.0.0/11", "185.80.0.0/13"
+            ]
+          },
+          "Bouygues": {
+            "name": "Bouygues Telecom",
+            "asn": "AS5410",
+            "ranges": [
+              "90.0.0.0/12", "109.208.0.0/12", "176.144.0.0/12"
+            ]
+          }
+        },
+        "broadband": {
+          "Free": {
+            "name": "Free SAS",
+            "asn": "AS12322",
+            "ranges": [
+              "212.27.32.0/19", "213.228.0.0/15"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Paris", "lat": 48.8566, "lon": 2.3522},
+        {"name": "Marseille", "lat": 43.2965, "lon": 5.3698},
+        {"name": "Lyon", "lat": 45.7640, "lon": 4.8357},
+        {"name": "Toulouse", "lat": 43.6047, "lon": 1.4442},
+        {"name": "Nice", "lat": 43.7102, "lon": 7.2620},
+        {"name": "Nantes", "lat": 47.2184, "lon": -1.5536},
+        {"name": "Bordeaux", "lat": 44.8378, "lon": -0.5792}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy S24", "iPhone 15 Pro", "iPhone 15", "Xiaomi 14",
+          "Google Pixel 8", "OnePlus 12"
+        ],
+        "desktop": [
+          "MacBook Pro", "HP Elite", "Dell XPS", "Lenovo ThinkPad"
+        ]
+      }
+    },
+    "BR": {
+      "name": "Brazil",
+      "language": "pt-BR",
+      "timezone": "America/Sao_Paulo",
+      "locale": "pt_BR",
+      "currency": "BRL",
+      "phone_code": "+55",
+      "isps": {
+        "mobile": {
+          "Vivo": {
+            "name": "Vivo",
+            "asn": "AS26599",
+            "ranges": [
+              "177.0.0.0/12", "179.0.0.0/11", "187.0.0.0/11",
+              "191.0.0.0/12", "200.142.0.0/15"
+            ]
+          },
+          "Claro": {
+            "name": "Claro Brasil",
+            "asn": "AS28573",
+            "ranges": [
+              "177.16.0.0/12", "179.32.0.0/11", "189.0.0.0/11"
+            ]
+          },
+          "TIM": {
+            "name": "TIM Brasil",
+            "asn": "AS26615",
+            "ranges": [
+              "177.64.0.0/11", "179.64.0.0/11", "191.32.0.0/11"
+            ]
+          }
+        },
+        "broadband": {
+          "NET": {
+            "name": "NET Servicos",
+            "asn": "AS28573",
+            "ranges": [
+              "201.0.0.0/12", "200.128.0.0/11"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "São Paulo", "lat": -23.5505, "lon": -46.6333},
+        {"name": "Rio de Janeiro", "lat": -22.9068, "lon": -43.1729},
+        {"name": "Brasília", "lat": -15.8267, "lon": -47.9218},
+        {"name": "Salvador", "lat": -12.9714, "lon": -38.5014},
+        {"name": "Fortaleza", "lat": -3.7172, "lon": -38.5433},
+        {"name": "Belo Horizonte", "lat": -19.9167, "lon": -43.9345},
+        {"name": "Manaus", "lat": -3.1190, "lon": -60.0217}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy A54", "Samsung Galaxy S23", "Motorola Moto G",
+          "iPhone 13", "Xiaomi Redmi Note 13", "Realme 11"
+        ],
+        "desktop": [
+          "Dell Inspiron", "HP Pavilion", "Lenovo IdeaPad", "Acer Aspire"
+        ]
+      }
+    },
+    "IN": {
+      "name": "India",
+      "language": "hi-IN",
+      "timezone": "Asia/Kolkata",
+      "locale": "en_IN",
+      "currency": "INR",
+      "phone_code": "+91",
+      "isps": {
+        "mobile": {
+          "Jio": {
+            "name": "Reliance Jio",
+            "asn": "AS55836",
+            "ranges": [
+              "49.44.0.0/14", "103.52.196.0/22", "106.198.0.0/15",
+              "117.192.0.0/10", "171.48.0.0/12"
+            ]
+          },
+          "Airtel": {
+            "name": "Bharti Airtel",
+            "asn": "AS24560",
+            "ranges": [
+              "49.204.0.0/14", "106.196.0.0/14", "117.96.0.0/11",
+              "182.64.0.0/10"
+            ]
+          },
+          "Vi": {
+            "name": "Vodafone Idea",
+            "asn": "AS38266",
+            "ranges": [
+              "49.248.0.0/13", "103.76.160.0/19", "117.192.0.0/11"
+            ]
+          }
+        },
+        "broadband": {
+          "BSNL": {
+            "name": "BSNL",
+            "asn": "AS9829",
+            "ranges": [
+              "14.96.0.0/11", "27.48.0.0/12", "49.0.0.0/11"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Mumbai", "lat": 19.0760, "lon": 72.8777},
+        {"name": "Delhi", "lat": 28.7041, "lon": 77.1025},
+        {"name": "Bangalore", "lat": 12.9716, "lon": 77.5946},
+        {"name": "Hyderabad", "lat": 17.3850, "lon": 78.4867},
+        {"name": "Chennai", "lat": 13.0827, "lon": 80.2707},
+        {"name": "Kolkata", "lat": 22.5726, "lon": 88.3639},
+        {"name": "Pune", "lat": 18.5204, "lon": 73.8567}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy M34", "Xiaomi Redmi Note 13", "Realme 11 Pro",
+          "Vivo V29", "Oppo Reno 10", "OnePlus Nord 3", "iPhone 13"
+        ],
+        "desktop": [
+          "HP Pavilion", "Dell Inspiron", "Lenovo IdeaPad", "Asus VivoBook"
+        ]
+      }
+    },
+    "JP": {
+      "name": "Japan",
+      "language": "ja-JP",
+      "timezone": "Asia/Tokyo",
+      "locale": "ja_JP",
+      "currency": "JPY",
+      "phone_code": "+81",
+      "isps": {
+        "mobile": {
+          "NTT DoCoMo": {
+            "name": "NTT DoCoMo",
+            "asn": "AS2516",
+            "ranges": [
+              "1.72.0.0/13", "49.96.0.0/11", "60.112.0.0/12",
+              "110.0.0.0/11", "126.0.0.0/10"
+            ]
+          },
+          "SoftBank": {
+            "name": "SoftBank Mobile",
+            "asn": "AS17676",
+            "ranges": [
+              "60.32.0.0/11", "106.128.0.0/11", "126.128.0.0/11"
+            ]
+          },
+          "au": {
+            "name": "KDDI au",
+            "asn": "AS2516",
+            "ranges": [
+              "49.98.0.0/15", "106.160.0.0/11", "125.192.0.0/11"
+            ]
+          }
+        },
+        "broadband": {
+          "OCN": {
+            "name": "NTT OCN",
+            "asn": "AS4713",
+            "ranges": [
+              "210.128.0.0/11", "211.0.0.0/10"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Tokyo", "lat": 35.6762, "lon": 139.6503},
+        {"name": "Osaka", "lat": 34.6937, "lon": 135.5023},
+        {"name": "Yokohama", "lat": 35.4437, "lon": 139.6380},
+        {"name": "Nagoya", "lat": 35.1815, "lon": 136.9066},
+        {"name": "Sapporo", "lat": 43.0642, "lon": 141.3469},
+        {"name": "Fukuoka", "lat": 33.5904, "lon": 130.4017},
+        {"name": "Kobe", "lat": 34.6901, "lon": 135.1955}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro", "iPhone 15", "Sony Xperia 1 V", "Samsung Galaxy S24",
+          "Sharp Aquos R8", "Google Pixel 8"
+        ],
+        "desktop": [
+          "MacBook Pro", "Sony VAIO", "Fujitsu Lifebook", "Panasonic Let's Note"
+        ]
+      }
+    },
+    "SG": {
+      "name": "Singapore",
+      "language": "en-SG",
+      "timezone": "Asia/Singapore",
+      "locale": "en_SG",
+      "currency": "SGD",
+      "phone_code": "+65",
+      "isps": {
+        "mobile": {
+          "Singtel": {
+            "name": "SingTel Mobile",
+            "asn": "AS7473",
+            "ranges": [
+              "27.125.128.0/17", "101.127.0.0/17", "202.156.0.0/15"
+            ]
+          },
+          "StarHub": {
+            "name": "StarHub Mobile",
+            "asn": "AS4657",
+            "ranges": [
+              "27.125.0.0/17", "101.127.128.0/17", "202.166.0.0/15"
+            ]
+          },
+          "M1": {
+            "name": "M1 Limited",
+            "asn": "AS9506",
+            "ranges": [
+              "43.241.0.0/17", "103.10.4.0/22"
+            ]
+          }
+        },
+        "broadband": {
+          "ViewQwest": {
+            "name": "ViewQwest",
+            "asn": "AS38001",
+            "ranges": [
+              "103.16.124.0/22", "103.234.0.0/22"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Singapore", "lat": 1.3521, "lon": 103.8198},
+        {"name": "Jurong", "lat": 1.3404, "lon": 103.7090},
+        {"name": "Woodlands", "lat": 1.4382, "lon": 103.7891},
+        {"name": "Tampines", "lat": 1.3496, "lon": 103.9568}
+      ],
+      "devices": {
+        "mobile": [
+          "iPhone 15 Pro Max", "iPhone 15 Pro", "Samsung Galaxy S24 Ultra",
+          "Google Pixel 8 Pro", "OnePlus 12"
+        ],
+        "desktop": [
+          "MacBook Pro M3", "Dell XPS", "HP Spectre", "Surface Laptop"
+        ]
+      }
+    },
+    "MX": {
+      "name": "Mexico",
+      "language": "es-MX",
+      "timezone": "America/Mexico_City",
+      "locale": "es_MX",
+      "currency": "MXN",
+      "phone_code": "+52",
+      "isps": {
+        "mobile": {
+          "Telcel": {
+            "name": "Telcel",
+            "asn": "AS8151",
+            "ranges": [
+              "187.128.0.0/11", "189.128.0.0/10", "201.96.0.0/11"
+            ]
+          },
+          "Movistar": {
+            "name": "Movistar Mexico",
+            "asn": "AS22925",
+            "ranges": [
+              "187.190.0.0/15", "201.140.0.0/14"
+            ]
+          }
+        },
+        "broadband": {
+          "Telmex": {
+            "name": "Telmex",
+            "asn": "AS8151",
+            "ranges": [
+              "189.128.0.0/11", "200.33.0.0/16"
+            ]
+          }
+        }
+      },
+      "cities": [
+        {"name": "Mexico City", "lat": 19.4326, "lon": -99.1332},
+        {"name": "Guadalajara", "lat": 20.6597, "lon": -103.3496},
+        {"name": "Monterrey", "lat": 25.6866, "lon": -100.3161},
+        {"name": "Puebla", "lat": 19.0414, "lon": -98.2063},
+        {"name": "Tijuana", "lat": 32.5149, "lon": -117.0382}
+      ],
+      "devices": {
+        "mobile": [
+          "Samsung Galaxy A54", "Motorola Moto G", "Xiaomi Redmi Note 13",
+          "iPhone 13", "Realme 11"
+        ],
+        "desktop": [
+          "HP Pavilion", "Dell Inspiron", "Lenovo IdeaPad", "Acer Aspire"
+        ]
+      }
+    }
+  }
+}

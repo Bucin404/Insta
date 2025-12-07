@@ -1,0 +1,30 @@
+# Ultra Boosted V13 2025 - Instagram Account Creator
+# Python 3.8+ required
+
+# Core Dependencies
+requests>=2.31.0
+aiohttp>=3.9.0
+faker>=22.0.0
+colorama>=0.4.6
+
+# HTTP Clients & Anti-Detection
+curl-cffi>=0.6.0  # Best for TLS fingerprinting (Chrome impersonation)
+httpx>=0.26.0
+tls-client>=1.0.0
+urllib3>=2.1.0
+
+# Data Processing
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Date/Time Handling
+python-dateutil>=2.8.0
+
+# Compression
+brotli>=1.1.0
+
+# Web Scraping (if needed)
+beautifulsoup4>=4.12.0
+
+# Optional but recommended
+cryptography>=41.0.0  # For encryption support
