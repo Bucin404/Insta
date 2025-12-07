@@ -5865,7 +5865,7 @@ class AdvancedIPStealthSystem2025:
                     ip_pool.append(ip_info)
                     
                 except Exception as e:
-                    print(f"{kuning}    Error generating IP from {selected_range}: {str(e)[:30]}{reset}")
+                    print(f"{kuning}    Error generating IP from {selected_range}: {type(e).__name__}: {str(e)}{reset}")
                     continue
         
         return ip_pool
@@ -7733,7 +7733,7 @@ class AdvancedIPStealthSystem2025:
                             print(f"{kuning}    No validated IPs for {isp}{reset}")
                             
                 except Exception as e:
-                    print(f"{merah}    Error generating {isp} IPs: {str(e)[:50]}{reset}")
+                    print(f"{merah}    Error generating {isp} IPs: {type(e).__name__}: {str(e)}{reset}")
                     continue
         
         # Add to pool with deduplication
