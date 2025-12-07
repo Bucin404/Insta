@@ -1224,14 +1224,19 @@ class UnifiedSessionManager2025:
                 logger.warning("No countries found in database, using fallback")
                 return self._get_fallback_country_database()
             
-            # Validate first country to ensure schema is correct
-            first_country = next(iter(countries.values()))
+            # Validate all countries to ensure schema consistency
             required_fields = ["name", "language", "timezone", "locale", "currency", "isps", "cities", "devices"]
-            if not all(field in first_country for field in required_fields):
-                logger.error("Country database schema validation failed, using fallback")
-                return self._get_fallback_country_database()
+            for country_code, country_data in countries.items():
+                if not all(field in country_data for field in required_fields):
+                    logger.error(f"Country {country_code} missing required fields, using fallback")
+                    return self._get_fallback_country_database()
+                
+                # Validate ISPs structure
+                if "mobile" not in country_data["isps"] and "broadband" not in country_data["isps"]:
+                    logger.error(f"Country {country_code} has no ISPs defined, using fallback")
+                    return self._get_fallback_country_database()
             
-            logger.info(f"Successfully loaded country database with {len(countries)} countries")
+            logger.info(f"Successfully loaded and validated country database with {len(countries)} countries")
             return data
             
         except json.JSONDecodeError as e:
