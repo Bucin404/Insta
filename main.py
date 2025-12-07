@@ -1409,16 +1409,28 @@ class UnifiedSessionManager2025:
         }
     
     def _generate_ip_from_cidr(self, cidr: str) -> str:
-        """Generate random IP from CIDR range"""
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
         try:
             network = ipaddress.ip_network(cidr, strict=False)
-            # Get random IP from network (avoiding first and last)
-            hosts = list(network.hosts())
-            if len(hosts) > 10:
-                # Avoid common IPs (first 5, last 5)
-                hosts = hosts[5:-5]
-            if hosts:
-                return str(random.choice(hosts))
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
+                return str(network.network_address)
+            
+            # OPTIMIZED: Don't list all IPs for large ranges
+            # Generate random IP directly using offset
+            if num_addresses > 1000:
+                # Large range - use random offset
+                random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+            elif num_addresses > 20:
+                # Medium range - avoid first 5 and last 5
+                random_offset = random.randint(5, num_addresses - 6)
+            else:
+                # Small range - just avoid first and last
+                random_offset = random.randint(1, max(1, num_addresses - 2))
+            
+            ip = network.network_address + random_offset
+            return str(ip)
         except Exception:
             pass
         
@@ -4265,26 +4277,46 @@ class UltraStealthIPGenerator2025:
         return {"countries": {}}
     
     def _generate_ip_from_cidr_range(self, cidr: str) -> Optional[str]:
-        """Generate random IP from CIDR range"""
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
         try:
             network = ipaddress.ip_network(cidr, strict=False)
-            # Get all hosts in the network
-            hosts = list(network.hosts())
-            if not hosts:
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
                 return None
             
-            # Exclude common server IPs
+            # OPTIMIZED: Don't list all IPs, just generate random one directly
+            # For large ranges (e.g., /12 = 1M IPs), listing all would be slow
+            max_attempts = 20
             excluded_octets = {0, 1, 2, 100, 128, 200, 254, 255}
-            valid_hosts = [h for h in hosts if int(str(h).split('.')[-1]) not in excluded_octets]
             
-            if not valid_hosts:
-                valid_hosts = hosts
+            for attempt in range(max_attempts):
+                # Generate random offset within range
+                # Skip first (network) and last (broadcast) addresses
+                if num_addresses > 1000:
+                    # For large ranges, use full randomness
+                    random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+                else:
+                    # For small ranges, avoid network/broadcast
+                    random_offset = random.randint(1, num_addresses - 2)
+                
+                # Add timestamp-based entropy for uniqueness
+                timestamp_entropy = int(time.time() * 1000000) % max(1, num_addresses // 10)
+                final_offset = (random_offset + timestamp_entropy) % (num_addresses - 2) + 1
+                
+                ip = network.network_address + final_offset
+                ip_str = str(ip)
+                
+                # Check if last octet is good (avoid common server IPs)
+                last_octet = int(ip_str.split('.')[-1])
+                if last_octet not in excluded_octets:
+                    return ip_str
             
-            # Add timestamp-based entropy
-            timestamp_entropy = int(time.time() * 1000) % len(valid_hosts)
-            random_index = (random.randint(0, len(valid_hosts) - 1) + timestamp_entropy) % len(valid_hosts)
+            # If all attempts failed, just return a random IP without filtering
+            random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+            ip = network.network_address + random_offset
+            return str(ip)
             
-            return str(valid_hosts[random_index])
         except Exception as e:
             print(f"{kuning}    Warning: Could not parse CIDR {cidr}: {e}{reset}")
             return None
@@ -5731,62 +5763,98 @@ class AdvancedIPStealthSystem2025:
         return self._generate_country_ips("IN", ["jio", "airtel_in", "vi_in"])
     
     def _generate_country_ips(self, country_code: str, isp_list: List[str]) -> List[Dict[str, Any]]:
-        """Generate IPs for a specific country with full synchronization"""
-        country_config = self._get_country_config().get(country_code)
-        if not country_config:
+        """Generate IPs for a specific country using country_database.json - OPTIMIZED"""
+        # Load from JSON database instead of hardcoded config
+        country_db = self._load_country_database()
+        country_data = country_db.get("countries", {}).get(country_code)
+        
+        if not country_data:
+            print(f"{kuning}    No config for {country_code} in database{reset}")
             return []
         
         ip_pool = []
+        
         for isp_name in isp_list:
-            isp_config = country_config["isps"].get(isp_name)
+            # Check both mobile and broadband ISPs
+            isp_config = None
+            isp_type = None
+            
+            mobile_isps = country_data.get("isps", {}).get("mobile", {})
+            if isp_name in mobile_isps:
+                isp_config = mobile_isps[isp_name]
+                isp_type = "mobile"
+            else:
+                broadband_isps = country_data.get("isps", {}).get("broadband", {})
+                if isp_name in broadband_isps:
+                    isp_config = broadband_isps[isp_name]
+                    isp_type = "broadband"
+            
             if not isp_config:
+                print(f"{kuning}    ISP {isp_name} not found in {country_code}{reset}")
                 continue
             
-            for _ in range(random.randint(2, 5)):
-                # Generate IP
-                prefix = random.choice(isp_config["prefixes"])
-                parts = prefix.split('.')
-                while len(parts) < 4:
-                    parts.append(str(random.randint(2, 253)))
-                ip = '.'.join(parts[:4])
-                
-                # Validate
-                if not self._validate_ip_format_enhanced(ip):
+            # Get IP ranges from database
+            ip_ranges = isp_config.get("ranges", [])
+            if not ip_ranges:
+                print(f"{kuning}    No IP ranges for {isp_name} in {country_code}{reset}")
+                continue
+            
+            # Generate multiple IPs from ranges
+            for _ in range(random.randint(3, 7)):
+                try:
+                    # Select random range
+                    selected_range = random.choice(ip_ranges)
+                    
+                    # Generate IP from CIDR range (using optimized function)
+                    ip = self._generate_ip_from_cidr(selected_range)
+                    
+                    if not ip or not self._validate_ip_format_enhanced(ip):
+                        continue
+                    
+                    # Select random city
+                    cities = country_data.get("cities", [])
+                    if not cities:
+                        cities = [{"name": "Unknown", "lat": 0, "lon": 0}]
+                    city = random.choice(cities)
+                    
+                    # Select random device
+                    devices = country_data.get("devices", {})
+                    device_type = random.choice(["mobile", "desktop"])
+                    device_dict = devices.get(device_type, {})
+                    
+                    if isinstance(device_dict, dict) and device_dict:
+                        device_name = random.choice(list(device_dict.keys()))
+                    else:
+                        device_name = "Unknown Device"
+                    
+                    # Create synchronized profile
+                    ip_info = {
+                        "ip": ip,
+                        "country": country_code,
+                        "country_name": country_data.get("name", country_code),
+                        "isp": isp_name,
+                        "asn": isp_config.get("asn", ""),
+                        "as_name": isp_config.get("name", isp_name),
+                        "city": city.get("name", "Unknown"),
+                        "region": city.get("name", "Unknown"),
+                        "latitude": city.get("lat", 0),
+                        "longitude": city.get("lon", 0),
+                        "timezone": country_data.get("timezone", "UTC"),
+                        "language": country_data.get("language", "en"),
+                        "connection_type": isp_type,
+                        "device_model": device_name,
+                        "health_score": random.randint(85, 98),
+                        "last_used": 0,
+                        "use_count": 0,
+                        "generated_at": time.time(),
+                        "timestamp": time.time()
+                    }
+                    
+                    ip_pool.append(ip_info)
+                    
+                except Exception as e:
+                    print(f"{kuning}    Error generating IP from {selected_range}: {str(e)[:30]}{reset}")
                     continue
-                
-                # Select city
-                city = random.choice(country_config["cities"])
-                
-                # Select device matching country
-                device_brand = random.choice(country_config["devices"])
-                device_model = random.choice(device_brand["models"])
-                
-                # Create synchronized profile
-                ip_info = {
-                    "ip": ip,
-                    "country": country_code,
-                    "country_name": country_config["name"],
-                    "isp": isp_name,
-                    "asn": isp_config["asn"],
-                    "as_name": isp_config["as_name"],
-                    "city": city["name"],
-                    "region": city["region"],
-                    "latitude": city["lat"],
-                    "longitude": city["lon"],
-                    "timezone": country_config["timezone"],
-                    "language": country_config["language"],
-                    "connection_type": isp_config["type"],
-                    "mcc": isp_config.get("mcc", ""),
-                    "mnc": isp_config.get("mnc", ""),
-                    "device_brand": device_brand["brand"],
-                    "device_model": device_model,
-                    "health_score": random.randint(85, 98),
-                    "last_used": 0,
-                    "use_count": 0,
-                    "generated_at": time.time()
-                }
-                
-                ip_pool.append(ip_info)
         
         return ip_pool
     
