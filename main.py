@@ -18141,6 +18141,7 @@ class InstagramAccountCreator2025:
         """
         print(f"{cyan}🏭  Starting batch creation of {count} accounts{reset}")
         print(f"{cyan}    Strategy: NEW SESSION per account (proper anti-detection){reset}")
+        print(f"{hijau}    ✅ Session Management: FIXED (commit a875a40) - One session per account{reset}")
         
         results = {
             "total": count,
@@ -18158,7 +18159,7 @@ class InstagramAccountCreator2025:
             print(f"\n{biru}🔹  Account {i + 1}/{count}{reset}")
             
             # ALWAYS create new session for each account - CRITICAL for anti-detection
-            print(f"{cyan}🆕  Creating new session for account {i + 1}...{reset}")
+            print(f"{cyan}🆕  Creating NEW session for account {i + 1} (no reuse){reset}")
             current_session_id = await self._create_new_session()
             results["sessions_used"] += 1
             
