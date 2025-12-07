@@ -4294,17 +4294,17 @@ class UltraStealthIPGenerator2025:
                 # Generate random offset within range
                 # Skip first (network) and last (broadcast) addresses
                 if num_addresses > 1000:
-                    # For large ranges, use full randomness
-                    random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+                    # For large ranges, use full randomness with safety margins
+                    random_offset = random.randint(10, num_addresses - 10)
                 else:
                     # For small ranges, avoid network/broadcast
                     random_offset = random.randint(1, num_addresses - 2)
                 
-                # Add timestamp-based entropy for uniqueness
-                timestamp_entropy = int(time.time() * 1000000) % max(1, num_addresses // 10)
-                final_offset = (random_offset + timestamp_entropy) % (num_addresses - 2) + 1
+                # Add additional entropy for uniqueness using random bits
+                extra_entropy = random.getrandbits(16) % max(1, num_addresses // 100)
+                final_offset = min(random_offset + extra_entropy, num_addresses - 2)
                 
-                ip = network.network_address + final_offset
+                ip = network.network_address + max(1, final_offset)
                 ip_str = str(ip)
                 
                 # Check if last octet is good (avoid common server IPs)
@@ -4313,7 +4313,7 @@ class UltraStealthIPGenerator2025:
                     return ip_str
             
             # If all attempts failed, just return a random IP without filtering
-            random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+            random_offset = random.randint(10, num_addresses - 10) if num_addresses > 1000 else random.randint(1, num_addresses - 2)
             ip = network.network_address + random_offset
             return str(ip)
             
