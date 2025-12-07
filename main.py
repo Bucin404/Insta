@@ -448,7 +448,7 @@ class APIAntiDetectionTiming:
         self.rate_limit_hits = {}
     
     def get_api_delay(self, request_type: str = "default") -> float:
-        """Get optimal delay for API requests
+        """Get optimal delay for API requests with human-like patterns
         
         Request types:
         - csrf: Get CSRF token (fast)
@@ -460,24 +460,37 @@ class APIAntiDetectionTiming:
         - between_accounts: Between account creations
         """
         delays = {
-            "csrf": (0.5, 1.5),
-            "check_email": (1.0, 2.5),
-            "check_username": (1.0, 2.5),
-            "send_code": (1.5, 3.0),
-            "verify_code": (2.0, 4.0),
-            "create_account": (2.0, 5.0),
-            "between_accounts": (8.0, 15.0),
-            "after_error": (3.0, 6.0),
-            "after_rate_limit": (30.0, 60.0),
-            "default": (1.0, 3.0),
+            "csrf": (0.8, 2.0),  # Increased min for more human-like
+            "check_email": (1.5, 3.5),  # Increased range
+            "check_username": (1.5, 3.5),
+            "send_code": (2.0, 4.5),  # More variation
+            "verify_code": (2.5, 5.5),  # More variation
+            "create_account": (3.0, 7.0),  # More conservative
+            "between_accounts": (12.0, 25.0),  # Much longer between accounts
+            "after_error": (5.0, 10.0),  # Longer after errors
+            "after_rate_limit": (45.0, 90.0),  # Much longer after rate limit
+            "default": (1.5, 4.0),
         }
         
         min_delay, max_delay = delays.get(request_type, delays["default"])
         
-        # Add slight randomness for natural timing
-        delay = random.uniform(min_delay, max_delay)
+        # Use beta distribution for more natural timing
+        # Beta(2,5) creates a distribution skewed towards min_delay
+        # which simulates human behavior (usually quick, occasionally slow)
+        import numpy as np
+        try:
+            # Beta distribution for natural randomness
+            beta_value = np.random.beta(2, 5)
+            delay = min_delay + (max_delay - min_delay) * beta_value
+        except:
+            # Fallback to uniform if numpy fails
+            delay = random.uniform(min_delay, max_delay)
         
-        return delay
+        # Add micro-jitter to avoid detection patterns
+        jitter = random.uniform(-0.1, 0.1)
+        delay += jitter
+        
+        return max(0.5, delay)  # Minimum 0.5s
     
     def start_session(self, session_id: str):
         """Mark session start time"""
@@ -547,6 +560,57 @@ class APIAntiDetectionTiming:
             return True, "Too many requests"
         
         return False, ""
+    
+    def get_typing_delay(self, text_length: int) -> float:
+        """Calculate human-like typing delay based on text length
+        
+        Simulates realistic typing speed: 40-60 WPM (words per minute)
+        Average: 50 WPM = ~250 chars/min = ~4.2 chars/sec = ~0.24s per char
+        
+        Args:
+            text_length: Length of text being typed
+            
+        Returns:
+            Delay in seconds
+        """
+        # Base typing speed: 40-60 WPM
+        chars_per_second = random.uniform(3.5, 5.0)  # 42-60 WPM
+        
+        # Calculate base delay
+        base_delay = text_length / chars_per_second
+        
+        # Add thinking pauses (10-30% chance of pause)
+        if random.random() < 0.2:
+            thinking_pause = random.uniform(0.5, 2.0)
+            base_delay += thinking_pause
+        
+        # Add micro-variations for natural rhythm
+        variation = base_delay * random.uniform(-0.15, 0.15)
+        
+        return max(0.5, base_delay + variation)
+    
+    def get_reading_delay(self, content_length: int = 100) -> float:
+        """Calculate human-like reading delay
+        
+        Average reading speed: 200-300 words per minute
+        Average word length: 5 characters
+        
+        Args:
+            content_length: Approximate length of content being read
+            
+        Returns:
+            Delay in seconds
+        """
+        # Reading speed: 200-300 WPM
+        words = content_length / 5  # Approx words
+        wpm = random.uniform(200, 300)
+        
+        reading_time = (words / wpm) * 60  # Convert to seconds
+        
+        # Add comprehension pause
+        comprehension = random.uniform(0.5, 1.5)
+        
+        return max(1.0, reading_time + comprehension)
 
 
 # Global API anti-detection timing instance
@@ -16946,8 +17010,16 @@ class InstagramAccountCreator2025:
             return False
     
     async def _simulate_pre_signup_behavior(self, session_id: str):
-        """Simulasi perilaku sebelum signup"""
-        print(f"{cyan}🧠  Simulating pre-signup behavior...{reset}")
+        """Simulasi perilaku sebelum signup - ENHANCED for anti-checkpoint
+        
+        Simulates realistic user behavior before signing up:
+        - Landing page viewing
+        - Reading terms/privacy
+        - Scrolling behavior
+        - Mouse movements
+        - Hesitation patterns
+        """
+        print(f"{cyan}🧠  Simulating realistic pre-signup behavior...{reset}")
         
         session = self.session_manager.get_session(session_id)
         if not session:
@@ -16955,23 +17027,47 @@ class InstagramAccountCreator2025:
         
         behavior_profile = session["behavior_profile"]
         
-        # Generate interaction sequence
+        # 1. Simulate landing on Instagram homepage
+        print(f"{cyan}    → Landing on homepage...{reset}")
+        landing_delay = api_timing.get_reading_delay(500)  # Read homepage content
+        await asyncio.sleep(min(landing_delay, 3.0))
+        
+        # 2. Random chance to "read" about Instagram
+        if random.random() < 0.4:  # 40% chance
+            print(f"{cyan}    → Reading about Instagram...{reset}")
+            read_delay = api_timing.get_reading_delay(800)
+            await asyncio.sleep(min(read_delay, 4.0))
+        
+        # 3. Simulate scrolling behavior (micro-delays)
+        scroll_count = random.randint(1, 3)
+        for i in range(scroll_count):
+            scroll_delay = random.uniform(0.3, 0.8)
+            await asyncio.sleep(scroll_delay)
+        
+        # 4. Simulate "clicking" on sign up button with hesitation
+        if random.random() < 0.3:  # 30% chance of hesitation
+            print(f"{cyan}    → Hesitating before signup...{reset}")
+            hesitation = random.uniform(1.5, 3.5)
+            await asyncio.sleep(hesitation)
+        
+        # 5. Generate interaction sequence from behavior system
         interactions = self.behavior_system.simulate_interaction(
             behavior_profile=behavior_profile,
             interaction_type="instagram_exploration"
         )
         
-        # Record interactions
-        for interaction in interactions[:5]:  # First 5 interactions
+        # Record interactions (limit to avoid too long simulation)
+        for interaction in interactions[:3]:  # First 3 interactions only
             self.session_manager.update_session_state(session_id, {
                 "interaction_log": f"Pre-signup: {interaction['type']}"
             })
             
-            # Simulate delay
+            # Simulate realistic delay
             if interaction.get("duration"):
-                await asyncio.sleep(min(interaction["duration"], 0.1))
+                # Cap at 2 seconds to keep reasonable timing
+                await asyncio.sleep(min(interaction["duration"], 2.0))
         
-        print(f"{hijau}✅  Pre-signup behavior simulation complete{reset}")
+        print(f"{hijau}✅  Pre-signup behavior simulation complete (appeared human-like){reset}")
     
     async def _get_email_for_account(self, session_id: str) -> Optional[Dict[str, Any]]:
         """Dapatkan email dengan fallback otomatis jika service gagal"""
