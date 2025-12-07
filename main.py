@@ -8069,6 +8069,17 @@ class AdvancedIPStealthSystem2025:
         
         if sessions_to_remove:
             print(f"{cyan}🧹  Cleaned up {len(sessions_to_remove)} old sessions{reset}")
+    
+    def destroy_session_ip(self, session_id: str):
+        """Destroy IP mapping for a specific session - ensures no IP carry-over
+        
+        Args:
+            session_id: Session ID to cleanup
+        """
+        if session_id in self.session_ip_map:
+            ip = self.session_ip_map[session_id]
+            del self.session_ip_map[session_id]
+            print(f"{cyan}    ✓ Removed IP mapping for session {session_id[:12]}... (IP: {ip}){reset}")
 
     def record_ip_result(self, ip: str, success: bool, proxy_detected: bool = False):
         """Record result of IP usage"""
@@ -12722,6 +12733,28 @@ class EmailServiceManager2025:
         
         print(f"{hijau}✅  All email sessions cleaned up{reset}")
     
+    async def destroy_session_email(self, session_id: str):
+        """Destroy all emails associated with a session - ensures no email carry-over
+        
+        Args:
+            session_id: Session ID to cleanup emails for
+        """
+        emails_to_remove = []
+        
+        # Find all emails for this session
+        for email_addr, data in self.email_cache.items():
+            if data.get("session_id") == session_id:
+                emails_to_remove.append(email_addr)
+        
+        # Remove them
+        for email_addr in emails_to_remove:
+            if email_addr in self.email_cache:
+                del self.email_cache[email_addr]
+                print(f"{cyan}    ✓ Removed email {email_addr} from cache{reset}")
+        
+        if emails_to_remove:
+            print(f"{hijau}✅  Destroyed {len(emails_to_remove)} email(s) for session {session_id[:12]}...{reset}")
+    
     async def __aenter__(self):
         """Context manager enter"""
         return self
@@ -15284,11 +15317,36 @@ class AdvancedSessionManager2025:
                 del self.sessions[session_id]
             if session_id in self.session_states:
                 del self.session_states[session_id]
+            if session_id in self.cookie_jar:
+                del self.cookie_jar[session_id]
         
         self._last_cleanup = current_time
         
         if sessions_to_remove:
             print(f"{cyan}🧹  Cleaned up {len(sessions_to_remove)} old sessions{reset}")
+    
+    def destroy_session(self, session_id: str):
+        """Destroy a specific session completely - CRITICAL for no carry-over
+        
+        This method ensures:
+        1. Session data is completely removed
+        2. Session state is cleared
+        3. Cookies are destroyed
+        4. No data carries over to next account
+        """
+        if session_id in self.sessions:
+            del self.sessions[session_id]
+            print(f"{cyan}    ✓ Destroyed session data for {session_id[:12]}...{reset}")
+        
+        if session_id in self.session_states:
+            del self.session_states[session_id]
+            print(f"{cyan}    ✓ Cleared session state for {session_id[:12]}...{reset}")
+        
+        if session_id in self.cookie_jar:
+            del self.cookie_jar[session_id]
+            print(f"{cyan}    ✓ Cleared cookies for {session_id[:12]}...{reset}")
+        
+        print(f"{hijau}✅  Session {session_id[:12]}... completely destroyed{reset}")
     
     def get_all_sessions(self, active_only: bool = True) -> List[Dict[str, Any]]:
         """Get all sessions"""
@@ -16637,10 +16695,20 @@ class InstagramAccountCreator2025:
                         "session_id": session_id,
                         "created_at": time.time()
                     })
+                    
+                    # **CRITICAL: Destroy session after successful account creation**
+                    # This ensures NO carry-over to the next account
+                    await self._destroy_session_completely(session_id)
+                    
                     return result
                 else:
                     # Return detailed error info for session management
                     error_type = creation_result.get("error_type", "unknown")
+                    
+                    # **CRITICAL: Destroy session after failed account creation**
+                    # This ensures NO carry-over to the next account
+                    await self._destroy_session_completely(session_id)
+                    
                     return self._record_failure(attempt_id, f"Account creation failed: {error_type}", error_type)
             # Backward compatibility for bool return
             elif creation_result:
@@ -16651,15 +16719,64 @@ class InstagramAccountCreator2025:
                     "session_id": session_id,
                     "created_at": time.time()
                 })
+                
+                # **CRITICAL: Destroy session after successful account creation**
+                await self._destroy_session_completely(session_id)
+                
                 return result
             else:
+                # **CRITICAL: Destroy session after failed account creation**
+                await self._destroy_session_completely(session_id)
+                
                 return self._record_failure(attempt_id, "Account creation failed", "unknown")
             
         except Exception as e:
             print(f"{merah}❌  Error in account creation: {e}{reset}")
             import traceback
             traceback.print_exc()
+            
+            # **CRITICAL: Destroy session on exception**
+            if session_id:
+                await self._destroy_session_completely(session_id)
+            
             return self._record_failure(attempt_id, f"Unexpected error: {str(e)}", "exception")
+    
+    async def _destroy_session_completely(self, session_id: str):
+        """Destroy session completely across ALL systems - CRITICAL FIX
+        
+        This ensures NO session data carries over to the next account.
+        Cleans up:
+        1. Session data and state (session manager)
+        2. IP mappings (IP system)
+        3. Email associations (email manager)
+        4. Cookies and tokens
+        5. HTTP client sessions
+        
+        Args:
+            session_id: Session ID to destroy completely
+        """
+        if not session_id:
+            return
+        
+        print(f"{kuning}🔄  Destroying session {session_id[:12]}... completely{reset}")
+        
+        # 1. Destroy session in session manager
+        if self.session_manager:
+            self.session_manager.destroy_session(session_id)
+        
+        # 2. Destroy IP mapping in IP system
+        if self.ip_system:
+            self.ip_system.destroy_session_ip(session_id)
+        
+        # 3. Destroy email associations in email manager
+        if self.email_manager:
+            await self.email_manager.destroy_session_email(session_id)
+        
+        # 4. Close HTTP client sessions if any
+        # Note: curl_cffi sessions are handled by the ChromeImpersonateClient
+        # which creates new sessions per request
+        
+        print(f"{hijau}✅  Session {session_id[:12]}... destroyed - ready for new account{reset}")
     
     async def _create_new_session(self) -> Optional[str]:
         """Buat session baru dengan semua komponen terintegrasi - RANDOM COUNTRY"""
