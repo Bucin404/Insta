@@ -5822,10 +5822,14 @@ class AdvancedIPStealthSystem2025:
                     device_type = random.choice(["mobile", "desktop"])
                     device_dict = devices.get(device_type, {})
                     
+                    device_name = "Unknown Device"
+                    device_user_agent = None
+                    
                     if isinstance(device_dict, dict) and device_dict:
                         device_name = random.choice(list(device_dict.keys()))
-                    else:
-                        device_name = "Unknown Device"
+                        device_info = device_dict.get(device_name, {})
+                        # GET USER AGENT FROM DATABASE
+                        device_user_agent = device_info.get("user_agent")
                     
                     # Create synchronized profile
                     ip_info = {
@@ -5843,6 +5847,8 @@ class AdvancedIPStealthSystem2025:
                         "language": country_data.get("language", "en"),
                         "connection_type": isp_type,
                         "device_model": device_name,
+                        "device_type": device_type,
+                        "user_agent": device_user_agent,  # ADD USER AGENT FROM DATABASE
                         "health_score": random.randint(85, 98),
                         "last_used": 0,
                         "use_count": 0,
