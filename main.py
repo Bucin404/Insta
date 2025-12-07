@@ -5494,6 +5494,38 @@ class AdvancedIPStealthSystem2025:
             "oxygen": self._generate_oxygen_ips,
         }
     
+    def _generate_ip_from_cidr(self, cidr: str) -> str:
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
+        try:
+            network = ipaddress.ip_network(cidr, strict=False)
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
+                return str(network.network_address)
+            
+            # OPTIMIZED: Don't list all IPs for large ranges
+            # Generate random IP directly using offset
+            if num_addresses > 1000:
+                # Large range - use random offset (ensure safe bounds)
+                random_offset = random.randint(10, num_addresses - 10)
+            elif num_addresses > 20:
+                # Medium range - avoid first 5 and last 5
+                random_offset = random.randint(5, num_addresses - 6)
+            else:
+                # Small range - just avoid first and last
+                random_offset = random.randint(1, max(1, num_addresses - 2))
+            
+            ip = network.network_address + random_offset
+            return str(ip)
+        except Exception:
+            pass
+        
+        # Fallback: parse CIDR and generate
+        parts = cidr.split('/')[0].split('.')
+        while len(parts) < 4:
+            parts.append(str(random.randint(2, 253)))
+        return '.'.join(parts[:4])
+    
     def _load_country_database(self) -> Dict[str, Any]:
         """Load comprehensive country database from JSON file"""
         try:
