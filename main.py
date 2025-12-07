@@ -1420,8 +1420,8 @@ class UnifiedSessionManager2025:
             # OPTIMIZED: Don't list all IPs for large ranges
             # Generate random IP directly using offset
             if num_addresses > 1000:
-                # Large range - use random offset
-                random_offset = random.randint(10, min(num_addresses - 10, num_addresses - 2))
+                # Large range - use random offset (ensure safe bounds)
+                random_offset = random.randint(10, num_addresses - 10)
             elif num_addresses > 20:
                 # Medium range - avoid first 5 and last 5
                 random_offset = random.randint(5, num_addresses - 6)
@@ -4294,14 +4294,15 @@ class UltraStealthIPGenerator2025:
                 # Generate random offset within range
                 # Skip first (network) and last (broadcast) addresses
                 if num_addresses > 1000:
-                    # For large ranges, use full randomness with safety margins
-                    random_offset = random.randint(10, num_addresses - 10)
+                    # For large ranges, ensure safe bounds (min 20 margin)
+                    random_offset = random.randint(10, max(20, num_addresses - 10))
                 else:
                     # For small ranges, avoid network/broadcast
                     random_offset = random.randint(1, num_addresses - 2)
                 
-                # Add additional entropy for uniqueness using random bits
-                extra_entropy = random.getrandbits(16) % max(1, num_addresses // 100)
+                # Add additional entropy for uniqueness (unbiased)
+                max_entropy = max(1, num_addresses // 100)
+                extra_entropy = random.randint(0, max_entropy - 1) if max_entropy > 1 else 0
                 final_offset = min(random_offset + extra_entropy, num_addresses - 2)
                 
                 ip = network.network_address + max(1, final_offset)
@@ -4313,7 +4314,10 @@ class UltraStealthIPGenerator2025:
                     return ip_str
             
             # If all attempts failed, just return a random IP without filtering
-            random_offset = random.randint(10, num_addresses - 10) if num_addresses > 1000 else random.randint(1, num_addresses - 2)
+            if num_addresses > 1000:
+                random_offset = random.randint(10, max(20, num_addresses - 10))
+            else:
+                random_offset = random.randint(1, num_addresses - 2)
             ip = network.network_address + random_offset
             return str(ip)
             
@@ -5826,7 +5830,9 @@ class AdvancedIPStealthSystem2025:
                     device_user_agent = None
                     
                     if isinstance(device_dict, dict) and device_dict:
-                        device_name = random.choice(list(device_dict.keys()))
+                        # Optimize: store keys list once
+                        device_keys = list(device_dict.keys())
+                        device_name = random.choice(device_keys)
                         device_info = device_dict.get(device_name, {})
                         # GET USER AGENT FROM DATABASE
                         device_user_agent = device_info.get("user_agent")
