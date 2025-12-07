@@ -5835,8 +5835,8 @@ class AdvancedIPStealthSystem2025:
                 print(f"{kuning}    No IP ranges for {isp_name} in {country_code}{reset}")
                 continue
             
-            # Generate multiple IPs from ranges
-            for _ in range(random.randint(3, 7)):
+            # Generate multiple IPs from ranges (increased for better yield)
+            for _ in range(random.randint(15, 25)):
                 try:
                     # Select random range
                     selected_range = random.choice(ip_ranges)
@@ -5934,9 +5934,9 @@ class AdvancedIPStealthSystem2025:
             if not self._verify_residential_ip(ip, isp_name):
                 continue
             
-            # Enhanced validation with balanced mode (75 is realistic for legitimate residential/mobile IPs)
+            # Enhanced validation with relaxed threshold (65 is realistic for legitimate residential/mobile IPs)
             validation = self.validator.validate(ip, strict=True)
-            if not validation["valid"] or validation["score"] < 75:  # Lowered from 85 to 75 for better fresh IP yield
+            if not validation["valid"] or validation["score"] < 65:  # Lowered from 75 to 65 for better fresh IP yield
                 continue
             
             # Check all blacklists
@@ -7748,11 +7748,11 @@ class AdvancedIPStealthSystem2025:
                         isp_ips = self._generate_dynamic_isp_ips(isp)
                     
                     if isp_ips:
-                        # Validate each IP
+                        # Validate each IP (relaxed threshold for more fresh IPs)
                         validated_ips = []
                         for ip_info in isp_ips:
                             validation = self.validator.validate(ip_info["ip"], strict=True)
-                            if validation["valid"] and validation["score"] >= 70:
+                            if validation["valid"] and validation["score"] >= 65:
                                 ip_info["validation_score"] = validation["score"]
                                 ip_info["last_validated"] = time.time()
                                 ip_info["country"] = country
