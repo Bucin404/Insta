@@ -1286,15 +1286,29 @@ class UnifiedSessionManager2025:
     
     def _generate_android_platform_for_country(self, country: str, country_data: Dict) -> Dict[str, Any]:
         """Generate Android platform info specific to country"""
-        devices = country_data.get("devices", {}).get("mobile", ["Samsung Galaxy A54"])
-        device = random.choice(devices)
+        devices = country_data.get("devices", {}).get("mobile", {})
+        
+        # Handle both dict (new format with user_agent) and list (old format)
+        if isinstance(devices, dict):
+            if not devices:
+                devices = {"Samsung Galaxy A54": {"user_agent": "Mozilla/5.0 (Linux; Android 13; SM-A546E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.112 Mobile Safari/537.36"}}
+            device_name = random.choice(list(devices.keys()))
+            device_info = devices[device_name]
+            user_agent = device_info.get("user_agent", "")
+        else:
+            # Fallback for old format (list)
+            if not devices:
+                devices = ["Samsung Galaxy A54"]
+            device_name = random.choice(devices)
+            user_agent = ""
         
         return {
             "os_type": "android",
             "os": "Android",
             "os_version": random.choice(["14", "15"]),  # Android 14, 15 (2024-2025)
-            "device": device,
-            "device_model": device.split()[-1] if " " in device else device,
+            "device": device_name,
+            "device_model": device_name.split()[-1] if " " in device_name else device_name,
+            "user_agent": user_agent,
             "country": country,
             "hardware": {
                 "ram": random.choice([6, 8, 12, 16]),
@@ -1304,11 +1318,24 @@ class UnifiedSessionManager2025:
     
     def _generate_desktop_platform_for_country(self, country: str, country_data: Dict) -> Dict[str, Any]:
         """Generate desktop platform info specific to country"""
-        devices = country_data.get("devices", {}).get("desktop", ["MacBook Pro"])
-        device = random.choice(devices)
+        devices = country_data.get("devices", {}).get("desktop", {})
+        
+        # Handle both dict (new format with user_agent) and list (old format)
+        if isinstance(devices, dict):
+            if not devices:
+                devices = {"MacBook Pro": {"user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.129 Safari/537.36"}}
+            device_name = random.choice(list(devices.keys()))
+            device_info = devices[device_name]
+            user_agent = device_info.get("user_agent", "")
+        else:
+            # Fallback for old format (list)
+            if not devices:
+                devices = ["MacBook Pro"]
+            device_name = random.choice(devices)
+            user_agent = ""
         
         # Determine OS from device name
-        if "mac" in device.lower():
+        if "mac" in device_name.lower():
             os_type = "macos"
             os_name = "macOS"
             os_version = random.choice(["14.5", "14.6", "14.7"])  # macOS Sonoma (2024-2025)
@@ -1321,8 +1348,9 @@ class UnifiedSessionManager2025:
             "os_type": os_type,
             "os": os_name,
             "os_version": os_version,
-            "device": device,
-            "device_model": device,
+            "device": device_name,
+            "device_model": device_name,
+            "user_agent": user_agent,
             "country": country,
             "hardware": {
                 "ram": random.choice([16, 32, 64]),
@@ -1844,7 +1872,16 @@ class UnifiedSessionManager2025:
         return ".".join(str(x) for x in ip_parts)
     
     def _generate_user_agent(self, platform: Dict, chrome_version: int) -> str:
-        """Generate User-Agent synchronized with platform and Chrome version"""
+        """Generate User-Agent synchronized with platform and Chrome version
+        
+        Uses pre-defined user agent from country database if available,
+        otherwise generates generic one based on platform info
+        """
+        # Use pre-defined user agent from database if available (device-specific)
+        if "user_agent" in platform and platform["user_agent"]:
+            return platform["user_agent"]
+        
+        # Fallback: generate generic user agent
         if platform["os_type"] == "android":
             return (
                 f"Mozilla/5.0 (Linux; Android {platform['os_version']}; "
