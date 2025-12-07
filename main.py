@@ -1203,15 +1203,81 @@ class UnifiedSessionManager2025:
         return session
     
     def _load_country_database_session(self) -> Dict[str, Any]:
-        """Load comprehensive country database from JSON file"""
+        """Load comprehensive country database from JSON file with validation"""
         try:
             db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "country_database.json")
-            if os.path.exists(db_path):
-                with open(db_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-        except Exception:
-            pass
-        return {"countries": {}}
+            if not os.path.exists(db_path):
+                logger.warning(f"Country database not found at {db_path}, using fallback data")
+                return self._get_fallback_country_database()
+            
+            with open(db_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # Validate database structure
+            if not isinstance(data, dict) or "countries" not in data:
+                logger.error("Invalid country database structure, using fallback")
+                return self._get_fallback_country_database()
+            
+            # Validate that we have at least one country with proper structure
+            countries = data.get("countries", {})
+            if not countries:
+                logger.warning("No countries found in database, using fallback")
+                return self._get_fallback_country_database()
+            
+            # Validate first country to ensure schema is correct
+            first_country = next(iter(countries.values()))
+            required_fields = ["name", "language", "timezone", "locale", "currency", "isps", "cities", "devices"]
+            if not all(field in first_country for field in required_fields):
+                logger.error("Country database schema validation failed, using fallback")
+                return self._get_fallback_country_database()
+            
+            logger.info(f"Successfully loaded country database with {len(countries)} countries")
+            return data
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse country database JSON: {e}, using fallback")
+            return self._get_fallback_country_database()
+        except Exception as e:
+            logger.error(f"Error loading country database: {e}, using fallback")
+            return self._get_fallback_country_database()
+    
+    def _get_fallback_country_database(self) -> Dict[str, Any]:
+        """Get fallback country database when main database fails to load"""
+        return {
+            "countries": {
+                "ID": {
+                    "name": "Indonesia",
+                    "language": "id-ID",
+                    "timezone": "Asia/Jakarta",
+                    "locale": "id_ID",
+                    "currency": "IDR",
+                    "isps": {
+                        "mobile": {
+                            "telkomsel": {
+                                "asn": "AS7713",
+                                "name": "Telkomsel",
+                                "ranges": ["114.120.0.0/13", "36.64.0.0/11", "180.240.0.0/13"]
+                            }
+                        },
+                        "broadband": {
+                            "indihome": {
+                                "asn": "AS7713",
+                                "name": "IndiHome",
+                                "ranges": ["180.244.0.0/14", "125.160.0.0/12"]
+                            }
+                        }
+                    },
+                    "cities": [
+                        {"name": "Jakarta", "lat": -6.2088, "lon": 106.8456},
+                        {"name": "Surabaya", "lat": -7.2575, "lon": 112.7521}
+                    ],
+                    "devices": {
+                        "mobile": ["Samsung Galaxy A54", "Xiaomi Redmi Note 12", "OPPO A78"],
+                        "desktop": ["ASUS VivoBook", "Lenovo IdeaPad", "HP 14s"]
+                    }
+                }
+            }
+        }
     
     def _generate_android_platform_for_country(self, country: str, country_data: Dict) -> Dict[str, Any]:
         """Generate Android platform info specific to country"""

@@ -1,6 +1,24 @@
 {
-  "_comment": "Comprehensive global country database for IP spoofing - RESIDENTIAL/MOBILE ISPs only (no datacenter/VPN IPs)",
+  "_comment": "Comprehensive global country database for IP spoofing - EXPANDED with legitimate residential/mobile ISP ranges",
   "_version": "2025.12.2",
+  "_schema": {
+    "countries": {
+      "name": "string",
+      "language": "string (ISO 639-1)",
+      "timezone": "string (IANA timezone)",
+      "locale": "string",
+      "currency": "string (ISO 4217)",
+      "isps": {
+        "mobile": {"isp_name": {"asn": "AS number", "name": "Full ISP name", "ranges": ["CIDR array"]}},
+        "broadband": {"isp_name": {"asn": "AS number", "name": "Full ISP name", "ranges": ["CIDR array"]}}
+      },
+      "cities": [{"name": "string", "lat": "float", "lon": "float"}],
+      "devices": {
+        "mobile": ["device names"],
+        "desktop": ["device names"]
+      }
+    }
+  },
   "countries": {
     "ID": {
       "name": "Indonesia",
@@ -127,6 +145,16 @@
               "180.180.0.0/16",
               "103.18.10.0/23"
             ]
+          },
+          "byonline": {
+            "asn": "AS38320",
+            "name": "BY.Online (Bakrie Telecom)",
+            "ranges": [
+              "103.130.0.0/16",
+              "103.145.0.0/16",
+              "103.162.0.0/16",
+              "103.231.0.0/16"
+            ]
           }
         },
         "broadband": {
@@ -149,7 +177,8 @@
               "202.43.0.0/16",
               "180.251.0.0/16",
               "36.70.0.0/15",
-              "103.247.0.0/16"
+              "103.247.0.0/16",
+              "180.253.0.0/16"
             ]
           },
           "biznet": {
@@ -195,85 +224,68 @@
               "103.31.196.0/22",
               "103.87.68.0/22"
             ]
+          },
+          "cbn": {
+            "asn": "AS17974",
+            "name": "CBN (Cyber Nusantara)",
+            "ranges": [
+              "103.18.20.0/22",
+              "103.24.52.0/22",
+              "103.231.136.0/22",
+              "103.47.144.0/22",
+              "103.55.184.0/22",
+              "202.169.224.0/20",
+              "103.18.24.0/21"
+            ]
+          },
+          "iconnet": {
+            "asn": "AS55699",
+            "name": "ICONNET (PLN Group)",
+            "ranges": [
+              "103.140.0.0/16",
+              "103.144.0.0/16",
+              "103.147.0.0/16",
+              "103.167.0.0/16",
+              "103.175.0.0/16"
+            ]
+          },
+          "linknet": {
+            "asn": "AS23700",
+            "name": "LinkNet (First Media)",
+            "ranges": [
+              "103.18.20.0/22",
+              "103.24.52.0/22",
+              "103.55.36.0/22",
+              "103.10.60.0/22"
+            ]
+          },
+          "oxygen": {
+            "asn": "AS58730",
+            "name": "Oxygen.id",
+            "ranges": [
+              "103.31.232.0/21",
+              "103.135.0.0/16",
+              "103.252.0.0/16"
+            ]
           }
         }
       },
       "cities": [
-        {
-          "name": "Jakarta",
-          "lat": -6.2088,
-          "lon": 106.8456
-        },
-        {
-          "name": "Surabaya",
-          "lat": -7.2575,
-          "lon": 112.7521
-        },
-        {
-          "name": "Bandung",
-          "lat": -6.9175,
-          "lon": 107.6191
-        },
-        {
-          "name": "Medan",
-          "lat": 3.5952,
-          "lon": 98.6722
-        },
-        {
-          "name": "Semarang",
-          "lat": -6.9667,
-          "lon": 110.4167
-        },
-        {
-          "name": "Makassar",
-          "lat": -5.1477,
-          "lon": 119.4327
-        },
-        {
-          "name": "Yogyakarta",
-          "lat": -7.7956,
-          "lon": 110.3695
-        },
-        {
-          "name": "Palembang",
-          "lat": -2.9761,
-          "lon": 104.7754
-        },
-        {
-          "name": "Denpasar",
-          "lat": -8.6705,
-          "lon": 115.2126
-        },
-        {
-          "name": "Balikpapan",
-          "lat": -1.2379,
-          "lon": 116.8529
-        },
-        {
-          "name": "Bekasi",
-          "lat": -6.2383,
-          "lon": 106.9756
-        },
-        {
-          "name": "Tangerang",
-          "lat": -6.1781,
-          "lon": 106.6297
-        },
-        {
-          "name": "Depok",
-          "lat": -6.4025,
-          "lon": 106.7942
-        },
-        {
-          "name": "Bogor",
-          "lat": -6.5971,
-          "lon": 106.806
-        },
-        {
-          "name": "Malang",
-          "lat": -7.9797,
-          "lon": 112.6304
-        }
+        {"name": "Jakarta", "lat": -6.2088, "lon": 106.8456},
+        {"name": "Surabaya", "lat": -7.2575, "lon": 112.7521},
+        {"name": "Bandung", "lat": -6.9175, "lon": 107.6191},
+        {"name": "Medan", "lat": 3.5952, "lon": 98.6722},
+        {"name": "Semarang", "lat": -6.9667, "lon": 110.4167},
+        {"name": "Makassar", "lat": -5.1477, "lon": 119.4327},
+        {"name": "Yogyakarta", "lat": -7.7956, "lon": 110.3695},
+        {"name": "Palembang", "lat": -2.9761, "lon": 104.7754},
+        {"name": "Denpasar", "lat": -8.6705, "lon": 115.2126},
+        {"name": "Balikpapan", "lat": -1.2379, "lon": 116.8529},
+        {"name": "Bekasi", "lat": -6.2383, "lon": 106.9756},
+        {"name": "Tangerang", "lat": -6.1781, "lon": 106.6297},
+        {"name": "Depok", "lat": -6.4025, "lon": 106.7942},
+        {"name": "Bogor", "lat": -6.5971, "lon": 106.806},
+        {"name": "Malang", "lat": -7.9797, "lon": 112.6304}
       ],
       "devices": {
         "mobile": [
@@ -283,50 +295,81 @@
           "Samsung Galaxy M54",
           "Samsung Galaxy A24",
           "Samsung Galaxy A04s",
+          "Samsung Galaxy M34 5G",
+          "Samsung Galaxy A14",
           "Xiaomi Redmi Note 12 Pro 5G",
+          "Xiaomi Redmi Note 12 Pro",
           "Xiaomi Redmi Note 12",
           "Xiaomi Redmi 13C",
           "Xiaomi Poco X6 Pro 5G",
           "Xiaomi Poco M6 Pro 5G",
           "Xiaomi Redmi 12C",
+          "Xiaomi Redmi Note 11",
+          "Xiaomi Redmi 12",
+          "Xiaomi Poco C55",
           "OPPO A78 5G",
           "OPPO A57",
           "OPPO Reno 10 5G",
           "OPPO A17k",
           "OPPO A18",
+          "OPPO A38",
+          "OPPO Reno 8",
+          "OPPO A77",
           "Vivo V29 5G",
           "Vivo V27 5G",
           "Vivo Y36",
           "Vivo Y16",
           "Vivo Y02",
+          "Vivo Y22",
+          "Vivo Y17",
+          "Vivo Y35",
           "realme 11 Pro+ 5G",
           "realme C55",
           "realme narzo 60 Pro 5G",
           "realme C53",
+          "realme 10",
+          "realme C35",
+          "realme narzo 50i",
+          "realme C30",
           "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
           "iPhone 15",
           "iPhone 14",
           "iPhone 13",
           "iPhone SE 2022",
+          "iPhone 12",
           "Infinix Hot 30",
           "Infinix Note 30 5G",
+          "Infinix Hot 20",
           "Tecno Spark 10 Pro",
-          "Tecno Camon 20"
+          "Tecno Camon 20",
+          "Tecno Pova 5"
         ],
         "desktop": [
           "ASUS VivoBook 14 X1404",
           "ASUS VivoBook 15 X1504",
           "ASUS TUF Gaming F15",
+          "ASUS X415",
+          "ASUS X515",
+          "ASUS ROG Strix G15",
           "Lenovo IdeaPad Slim 3",
           "Lenovo V14 G3",
+          "Lenovo V15 G3",
           "Lenovo ThinkBook 14",
+          "Lenovo IdeaPad Gaming 3",
           "HP 14s",
           "HP Pavilion 14",
           "HP 15s",
+          "HP 240 G9",
+          "HP Pavilion Gaming 15",
           "Acer Aspire 5",
+          "Acer Aspire 3",
           "Acer Swift 3",
+          "Acer Nitro 5",
           "Dell Inspiron 14",
-          "Dell Vostro 14"
+          "Dell Inspiron 15",
+          "Dell Vostro 14",
+          "Dell G15 Gaming"
         ]
       }
     }
@@ -336,51 +379,19 @@
       "ja3": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513,29-23-24,0",
       "ja3_hash": "cd08e31494f9531f560d64c695473da9",
       "tls_version": "1.3",
-      "cipher_suites": [
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_AES_256_GCM_SHA384",
-        "TLS_CHACHA20_POLY1305_SHA256"
-      ]
+      "cipher_suites": ["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256"]
     },
     "chrome_131": {
       "ja3": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-21,29-23-24,0",
       "ja3_hash": "cd08e31494f9531f560d64c695473da9",
       "tls_version": "1.3",
-      "cipher_suites": [
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_AES_256_GCM_SHA384",
-        "TLS_CHACHA20_POLY1305_SHA256"
-      ]
+      "cipher_suites": ["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256"]
     },
     "chrome_136": {
       "ja3": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-21,29-23-24,0",
       "ja3_hash": "cd08e31494f9531f560d64c695473da9",
       "tls_version": "1.3",
-      "cipher_suites": [
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_AES_256_GCM_SHA384",
-        "TLS_CHACHA20_POLY1305_SHA256"
-      ]
-    },
-    "firefox_121": {
-      "ja3": "771,4865-4867-4866-49195-49199-52393-52392-49196-49200-49162-49161-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-34-51-43-13-45-28-21,29-23-24-25-256-257,0",
-      "ja3_hash": "ac28bf3d4c7b268b8c8b4c3e7e9c0f8a",
-      "tls_version": "1.3",
-      "cipher_suites": [
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_CHACHA20_POLY1305_SHA256",
-        "TLS_AES_256_GCM_SHA384"
-      ]
-    },
-    "safari_17": {
-      "ja3": "771,4865-4866-4867-49196-49195-52393-49200-49199-52392-49162-49161-49172-49171-157-156-53-47,0-23-65281-10-11-16-5-13-18-51-45-43-27-21,29-23-24-25,0",
-      "ja3_hash": "bd85d9f1e7a8c3f4d2e1f6a7b8c9d0e1",
-      "tls_version": "1.3",
-      "cipher_suites": [
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_AES_256_GCM_SHA384",
-        "TLS_CHACHA20_POLY1305_SHA256"
-      ]
+      "cipher_suites": ["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256"]
     }
   }
 }
