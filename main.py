@@ -5934,9 +5934,9 @@ class AdvancedIPStealthSystem2025:
             if not self._verify_residential_ip(ip, isp_name):
                 continue
             
-            # Enhanced validation with very strict mode
+            # Enhanced validation with balanced mode (75 is realistic for legitimate residential/mobile IPs)
             validation = self.validator.validate(ip, strict=True)
-            if not validation["valid"] or validation["score"] < 85:  # Raised to 85
+            if not validation["valid"] or validation["score"] < 75:  # Lowered from 85 to 75 for better fresh IP yield
                 continue
             
             # Check all blacklists
