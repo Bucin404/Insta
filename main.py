@@ -133,7 +133,6 @@ def _load_blocked_ips_cache():
 
 def is_ip_blocked(ip: str) -> bool:
     """Check if IP is in the blocked list (fast in-memory check)"""
-    global _blocked_ips_cache
     if not _blocked_ips_cache:
         _load_blocked_ips_cache()
     return ip in _blocked_ips_cache
@@ -249,7 +248,6 @@ def save_blocked_ip(ip: str, isp: str, country: str, reason: str = None) -> bool
     Returns:
         True if saved successfully
     """
-    global _blocked_ips_cache
     try:
         blocked_ips = []
         if os.path.exists(BLOCKED_IPS_FILE):
@@ -367,7 +365,7 @@ def update_isp_stats(isp: str, result: str):
         with open(ISP_STATS_FILE, 'w') as f:
             json.dump(stats, f, indent=2)
             
-    except Exception as e:
+    except Exception:
         pass
 
 def get_best_isps(min_attempts: int = 3) -> List[Tuple[str, float]]:
@@ -399,7 +397,7 @@ def print_isp_stats():
         return
     
     print(f"\n{Fore.CYAN}{'='*60}")
-    print(f"ISP SUCCESS RATE STATISTICS")
+    print("ISP SUCCESS RATE STATISTICS")
     print(f"{'='*60}{Style.RESET_ALL}")
     print(f"{'ISP':<15} {'Success':<8} {'CP':<6} {'Block':<7} {'Total':<7} {'Rate':<8}")
     print(f"{'-'*60}")
@@ -691,7 +689,7 @@ class ChromeImpersonateClient:
             print(f"    🔒 Using curl_cffi with {self.chrome_version} impersonation")
             print(f"    📍 TLS: {self.tls_config['tls_version']} | HTTP/2: Enabled | JA3: Real Chrome")
         else:
-            print(f"    ⚠️ curl_cffi not available, using aiohttp (LESS SECURE - may get blocked)")
+            print("    ⚠️ curl_cffi not available, using aiohttp (LESS SECURE - may get blocked)")
     
     def _generate_tls_config(self) -> Dict[str, Any]:
         """Generate TLS configuration matching real Chrome"""
@@ -1147,7 +1145,7 @@ class UnifiedSessionManager2025:
             if os.path.exists(db_path):
                 with open(db_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
-        except Exception as e:
+        except Exception:
             pass
         return {"countries": {}}
     
@@ -1690,6 +1688,7 @@ class UnifiedSessionManager2025:
             "myrepublic": "AS63859",
             "cbn": "AS24218",
         }
+        return asns.get(isp, "AS0")
     
     def _generate_ip_from_range(self, range_info: Dict) -> str:
         """Generate IP from range"""
@@ -2137,13 +2136,6 @@ class UnifiedSessionManager2025:
         # Select consistent IDs for this session
         app_id = INSTAGRAM_APP_IDS["web"]
         asbd_id = random.choice(ASBD_IDS)
-        
-        # Generate X-Instagram-AJAX version (matches app version)
-        # Format: 1018038550 (timestamp-like)
-        ajax_version = str(int(time.time()) - random.randint(86400, 604800))  # Within last week
-        
-        # Generate WWW Claim (authorization token format)
-        www_claim = "0"  # Initial value, updated after auth
         
         # Base headers (synchronized with session)
         user_agent = session["user_agent"]
@@ -4330,7 +4322,7 @@ class UltraStealthIPGenerator2025:
                     
                     return result
                         
-        except Exception as e:
+        except Exception:
             pass  # Try next source
         
         # Source 2: ipinfo.io (free tier: 50k/month)
@@ -4356,7 +4348,7 @@ class UltraStealthIPGenerator2025:
                 result["is_usable"] = True
                 return result
                     
-        except Exception as e:
+        except Exception:
             pass  # Try next source
         
         # Source 3: ipwhois.app (free, no rate limit specified)
@@ -4381,7 +4373,7 @@ class UltraStealthIPGenerator2025:
                     result["is_usable"] = True
                     return result
                         
-        except Exception as e:
+        except Exception:
             pass
         
         # If all APIs fail, DON'T trust - return unverified
@@ -5730,7 +5722,6 @@ class AdvancedIPStealthSystem2025:
                 return False
             
             # Verify prefix matches ISP
-            ip_prefix = f"{parts[0]}.{parts[1]}"
             valid_prefixes = config.get("prefixes", [])
             
             if not any(ip.startswith(prefix) for prefix in valid_prefixes):
@@ -7586,15 +7577,12 @@ class AdvancedIPStealthSystem2025:
         # Pilih profile berdasarkan ISP dan connection type - FIXED
         if connection_type == "mobile":
             if isp in ["telkomsel", "indosat"]:
-                tcp_profile = "android_5g_premium"
                 browser_profile = "chrome_mobile_samsung"
                 tls_profile = "tls13_chrome_mobile"
             else:
-                tcp_profile = "android_4g_midrange"
                 browser_profile = "chrome_mobile_xiaomi"
                 tls_profile = "tls13_chrome_mobile_mid"
         else:  # wifi/fiber
-            tcp_profile = "android_wifi_premium"
             browser_profile = "chrome_tablet_samsung"
             tls_profile = "tls13_chrome_tablet"
         
@@ -8308,7 +8296,7 @@ class IPValidator2025:
                     
                     result["scanned"] = True
                     
-            except Exception as e:
+            except Exception:
                 # Fallback to socket scanning
                 result["method"] = "socket_fallback"
                 result = self._socket_scan_fallback(ip, ports, result)
@@ -8496,7 +8484,7 @@ class IPValidator2025:
                         "asn": asn,
                     }
             
-        except Exception as e:
+        except Exception:
             pass
         
         return {"success": False}
@@ -9475,11 +9463,11 @@ class IPValidator2025:
             # Check for network vs host bits
             # Ini sederhana, hanya untuk edukasi
             if parts[0] < 128:  # Class A
-                network_bits = 8
+                pass
             elif parts[0] < 192:  # Class B
-                network_bits = 16
+                pass
             else:  # Class C
-                network_bits = 24
+                pass
             
             # Untuk IP publik, host bits tidak boleh semua 0 atau semua 1
             host_part = parts[3]
@@ -9719,7 +9707,7 @@ class WebRTCWebGL_Spoofing2025:
                 "max_texture_size": 16384,
                 "max_viewport_dims": [16384, 16384],
             },
-            "apple_gpu": {
+            "apple_m_series": {
                 "vendor": "Apple Inc.",
                 "renderer": random.choice([
                     "Apple M3 Pro",
@@ -10165,41 +10153,41 @@ class WebRTCWebGL_Spoofing2025:
         fingerprint = self._generate_fingerprint_enhanced()
         
         sdp_lines = [
-            f"v=0",
+            "v=0",
             f"o=- {session_id} {session_version} IN IP4 0.0.0.0",
-            f"s=-",
-            f"t=0 0",
-            f"a=group:BUNDLE 0",
-            f"a=extmap-allow-mixed",
-            f"a=msid-semantic: WMS *",
-            f"m=application 9 UDP/DTLS/SCTP webrtc-datachannel",
-            f"c=IN IP4 0.0.0.0",
+            "s=-",
+            "t=0 0",
+            "a=group:BUNDLE 0",
+            "a=extmap-allow-mixed",
+            "a=msid-semantic: WMS *",
+            "m=application 9 UDP/DTLS/SCTP webrtc-datachannel",
+            "c=IN IP4 0.0.0.0",
             f"a=ice-ufrag:{ufrag}",
             f"a=ice-pwd:{pwd}",
-            f"a=ice-options:trickle",
+            "a=ice-options:trickle",
             f"a=fingerprint:sha-256 {fingerprint}",
-            f"a=setup:actpass",
-            f"a=mid:0",
-            f"a=sctp-port:5000",
-            f"a=max-message-size:262144"
+            "a=setup:actpass",
+            "a=mid:0",
+            "a=sctp-port:5000",
+            "a=max-message-size:262144"
         ]
         
         # Tambahkan atribut berdasarkan profile
         if "samsung" in profile:
             sdp_lines.extend([
-                f"a=rtcp-mux",
-                f"a=rtcp-rsize",
-                f"a=sctpmap:5000 webrtc-datachannel 256"
+                "a=rtcp-mux",
+                "a=rtcp-rsize",
+                "a=sctpmap:5000 webrtc-datachannel 256"
             ])
         elif "xiaomi" in profile:
             sdp_lines.extend([
-                f"a=rtcp-mux",
-                f"a=sctpmap:5000 webrtc-datachannel 128"
+                "a=rtcp-mux",
+                "a=sctpmap:5000 webrtc-datachannel 128"
             ])
         else:
             sdp_lines.extend([
-                f"a=rtcp-mux",
-                f"a=sctpmap:5000 webrtc-datachannel 256"
+                "a=rtcp-mux",
+                "a=sctpmap:5000 webrtc-datachannel 256"
             ])
         
         return "\r\n".join(sdp_lines)
@@ -10564,7 +10552,7 @@ class CloudflareCDN_Bypass2025:
             if not jschl_match:
                 return None
             
-            jschl_code = jschl_match.group(1)
+            jschl_match.group(1)
             
             # Simple calculation (dalam real implementation perlu eval JavaScript)
             jschl_answer = len(page_url) + random.randint(10, 100)
@@ -11441,8 +11429,8 @@ class AdvancedFingerprinting2025:
                 "mcc": "510",
                 "mnc": "99",  # Generic untuk WiFi
                 "operator": isp_info["name"],
-                "sim_operator": f"51099",
-                "network_operator": f"51099",
+                "sim_operator": "51099",
+                "network_operator": "51099",
                 "sim_country": country_code,
                 "network_country": country_code,
                 "sim_state": "absent",  # Tidak ada SIM untuk WiFi
@@ -12357,9 +12345,6 @@ class EmailServiceManager2025:
         # print(f"{cyan}    Config preferred_service: {self.preferred_service}{reset}")
         # print(f"{cyan}    Requested service_name: {service_name}{reset}")
         
-        # Tentukan apakah ini manual selection atau auto
-        is_manual = service_name is not None and service_name != "auto"
-        
         # 1. Jika service_name diberikan, gunakan itu (manual selection)
         if service_name and service_name in self.services:
             target_service = service_name
@@ -12834,7 +12819,6 @@ class DropmailService2025:
                     for mail in mails:
                         text = mail.get("text", "") or mail.get("headerSubject", "")
                         # Extract 6-digit OTP
-                        import re
                         otp_match = re.search(r'\b(\d{6})\b', text)
                         if otp_match:
                             return otp_match.group(1)
@@ -12916,7 +12900,6 @@ class TempMailLolService2025:
                     for email in emails:
                         body = email.get("body", "") or email.get("subject", "")
                         # Extract 6-digit OTP
-                        import re
                         otp_match = re.search(r'\b(\d{6})\b', body)
                         if otp_match:
                             return otp_match.group(1)
@@ -13015,7 +12998,6 @@ class InternalMailService2025:
                     for msg in data:
                         body = msg.get("body_text", "") or msg.get("subject", "")
                         # Extract 6-digit OTP
-                        import re
                         otp_match = re.search(r'\b(\d{6})\b', body)
                         if otp_match:
                             return otp_match.group(1)
@@ -14377,7 +14359,7 @@ class TenMinuteMailService2025:
                             if priority == 3 and pattern_name.startswith("ID_"):
                                 print(f"{cyan}      🎯 High priority Indonesian pattern matched: {pattern_name}{reset}")
                                 return otp_candidate, pattern_name
-            except Exception as e:
+            except Exception:
                 continue
         
         if found_matches:
@@ -14437,7 +14419,6 @@ class TenMinuteMailService2025:
                     # Cek apakah ada keyword Instagram - versi lebih cepat
                     instagram_keywords = ['Instagram', 'instagram', 'kode', 'code', 'verifikasi', 'verification']
                     found_instagram = False
-                    otp_found = None  # ⭐ INISIALISASI VARIABLE OTP
                     
                     # ⭐ OPTIMASI: Cek cepat dengan lower case
                     lower_data = data_str.lower()
@@ -14532,7 +14513,7 @@ class CmailService2025:
         """Get email from Cmail.ai"""
         try:
             # Generate random username
-            username = random_string(8)
+            username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
             domain = random.choice(self.available_domains)
             email = f"{username}@{domain}"
             
@@ -14737,7 +14718,7 @@ class AdvancedSessionManager2025:
         Uses Desktop/Web browser fingerprint for Web API compatibility.
         """
         # Extract browser info from fingerprint
-        browser = fingerprint.get("browser", {}) if fingerprint else {}
+        fingerprint.get("browser", {}) if fingerprint else {}
         
         # Generate fresh, realistic Chrome version (131-136 are current as of late 2024)
         chrome_major = random.choice([131, 132, 133, 134, 135, 136])
@@ -15486,7 +15467,7 @@ class RequestOrchestrator2025:
         
         # Get session headers as base
         session_headers = session.get("headers", {})
-        current_headers = session.get("current_headers", {})
+        session.get("current_headers", {})
         metadata = session.get("metadata", {})
         tokens = session.get("tokens", {})
         
@@ -15524,8 +15505,8 @@ class RequestOrchestrator2025:
         elif request_type == "ajax" or (method == "POST" and "api" in url):
             # AJAX/API request headers
             csrf_token = tokens.get("csrftoken", "")
-            ajax_id = tokens.get("ajax_id", "1029952363")
-            web_session_id = session.get("extra_session_id", "")
+            tokens.get("ajax_id", "1029952363")
+            session.get("extra_session_id", "")
             
             # CLEAN API HEADERS - Only essential headers, avoid suspicious custom ones
             headers.update({
@@ -16510,17 +16491,17 @@ class InstagramAccountCreator2025:
         print(f"{cyan}🔥  Warming up systems...{reset}")
         
         # Generate test fingerprint
-        test_fingerprint = self.fingerprint_system.generate_fingerprint(
+        self.fingerprint_system.generate_fingerprint(
             device_type=self.config["device_type"],
             location=self.config["location"]
         )
         
         # Generate test behavior profile
-        test_behavior = self.behavior_system.generate_behavior_profile()
+        self.behavior_system.generate_behavior_profile()
         
         # Generate initial IP pool - PERUBAHAN DI SINI!
         print(f"{cyan}🌐  Generating initial IP pool...{reset}")
-        test_ip_config = self.ip_system.get_fresh_ip_config()  # GANTI!
+        self.ip_system.get_fresh_ip_config()  # GANTI!
         
         # Show IP pool stats
         ip_stats = self.ip_system.get_ip_pool_stats()
@@ -17324,9 +17305,6 @@ class InstagramAccountCreator2025:
             
             if status == 200:
                 try:
-                    body = response.get("body", b"{}").decode('utf-8', errors='ignore')
-                    # print(f"{cyan}    Response body: {body[:200]}...{reset}")
-
                     data = json.loads(response.get("body", b"{}"))
                     signup_code = data.get("signup_code", "")
                     
@@ -17567,7 +17545,7 @@ class InstagramAccountCreator2025:
                                         current_country = ip_config.get("country", "ID")
                                         if current_ip:
                                             save_checkpoint_ip(current_ip, current_isp, current_country, username, "profile_edit_failed")
-                                    except Exception as e:
+                                    except Exception:
                                         pass
                                     
                                     result["error_type"] = "checkpoint"
@@ -18761,10 +18739,10 @@ class CLIInterface:
         
         # **FORCE EMAIL SERVICE SELECTION**
         print(f"\n{cyan}📧  EMAIL SERVICE SELECTION (Override){reset}")
-        print(f"  1. 1secmail")
-        print(f"  2. 10minutemail")
-        print(f"  3. Mail.tm")
-        print(f"  4. Auto (default)")
+        print("  1. 1secmail")
+        print("  2. 10minutemail")
+        print("  3. Mail.tm")
+        print("  4. Auto (default)")
         
         service_choice = input(f"{cyan}Select email service (1-4): {reset}").strip()
         
@@ -19077,9 +19055,9 @@ class CLIInterface:
         if successful < 3:
             print(f"\n{kuning}⚠️   Warning: Few email services working{reset}")
             print(f"  {cyan}Recommendations:{reset}")
-            print(f"    1. Check internet connection")
-            print(f"    2. Some services may be blocked in your region")
-            print(f"    3. Try using a VPN")
+            print("    1. Check internet connection")
+            print("    2. Some services may be blocked in your region")
+            print("    3. Try using a VPN")
     
     async def _test_webrtc_system(self):
         """Test WebRTC/WebGL system"""
@@ -19452,10 +19430,10 @@ class CLIInterface:
             print(f"  {kuning}Moderate success rate. Try changing email service or increasing cooldowns.{reset}")
         else:
             print(f"  {merah}Low success rate. Consider:{reset}")
-            print(f"     • Change email service")
-            print(f"     • Increase cooldown times (60-120s)")
-            print(f"     • Use maximum anti-detection mode")
-            print(f"     • Check if Instagram is blocking your IP")
+            print("     • Change email service")
+            print("     • Increase cooldown times (60-120s)")
+            print("     • Use maximum anti-detection mode")
+            print("     • Check if Instagram is blocking your IP")
     
     def _show_test_result(self, system_name: str, result: Dict[str, Any], simple: bool = False):
         """Show test result dengan format yang lebih baik"""
