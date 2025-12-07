@@ -1157,7 +1157,7 @@ class UnifiedSessionManager2025:
         return {
             "os_type": "android",
             "os": "Android",
-            "os_version": random.choice(["13", "14"]),
+            "os_version": random.choice(["14", "15"]),  # Android 14, 15 (2024-2025)
             "device": device,
             "device_model": device.split()[-1] if " " in device else device,
             "country": country,
@@ -1176,7 +1176,7 @@ class UnifiedSessionManager2025:
         if "mac" in device.lower():
             os_type = "macos"
             os_name = "macOS"
-            os_version = random.choice(["14.4", "14.3", "14.2"])
+            os_version = random.choice(["14.5", "14.6", "14.7"])  # macOS Sonoma (2024-2025)
         else:
             os_type = "windows"
             os_name = "Windows"
@@ -1363,7 +1363,7 @@ class UnifiedSessionManager2025:
             return {
                 "os_type": "macos",
                 "os_name": "macOS",
-                "os_version": random.choice(["13.0", "13.5", "14.0", "14.2"]),
+                "os_version": random.choice(["14.0", "14.5", "15.0", "15.1"]),  # Android 14-15 (2024-2025)
                 "device_brand": "Apple",
                 "device_model": random.choice(["MacBook Pro 16", "MacBook Pro 14", "MacBook Air M2"]),
                 "screen_width": random.choice([2560, 3024, 3456]),
@@ -3169,7 +3169,7 @@ class AdvancedBrowserFingerprint2025:
             device_type = random.choice(["android", "desktop"])
         
         if device_type in ["android", "mobile"]:
-            android_version = random.choice([12, 13, 14, 15])
+            android_version = random.choice([13, 14, 15])  # Android 13-15 (2023-2025)
             return {
                 "platform": "Linux armv8l",
                 "version": str(android_version),
@@ -3188,7 +3188,7 @@ class AdvancedBrowserFingerprint2025:
                     "architecture": "x86_64",
                 }
             else:
-                macos_version = random.choice(["10.15", "13.0", "14.0", "14.5"])
+                macos_version = random.choice(["13.0", "14.0", "14.5", "14.6", "15.0"])  # macOS Ventura to Sequoia (2024-2025)
                 return {
                     "platform": "MacIntel",
                     "version": macos_version,
@@ -4947,7 +4947,7 @@ class UltraStealthIPGenerator2025:
                     "type": "mobile",
                     "model": device,
                     "os": "iOS",
-                    "os_version": random.choice(["17.4", "17.3", "17.2", "17.1"]),
+                    "os_version": random.choice(["17.4", "17.5", "17.6", "18.0", "18.1"]),  # iOS 17-18 (2024-2025)
                     "browser": "Safari",
                     "browser_version": random.choice(["17.4", "17.3", "17.2"]),
                 }
@@ -4956,7 +4956,7 @@ class UltraStealthIPGenerator2025:
                     "type": "mobile",
                     "model": device,
                     "os": "Android",
-                    "os_version": random.choice(["14", "13", "12"]),
+                    "os_version": random.choice(["14", "15"]),  # Android 14-15 (2024-2025)
                     "browser": "Chrome",
                     "browser_version": random.choice(["122.0.6261", "121.0.6167", "120.0.6099"]),
                 }
@@ -7239,7 +7239,7 @@ class AdvancedIPStealthSystem2025:
             "model": device["model"],
             "name": device["name"],
             "connection_type": connection_type,  # FIXED: simpan connection type
-            "android_version": random.choice(["13", "14", "15"]),
+            "android_version": random.choice(["14", "15"]),  # Android 14-15 (2024-2025)
             "chrome_version": f"{random.randint(130, 135)}.0.{random.randint(6000, 7000)}.{random.randint(0, 99)}",
             "webview_version": f"{random.randint(110, 120)}.0.{random.randint(5000, 6000)}",
             "build_id": f"UP1A.{random.randint(230101, 231231)}.{random.randint(100, 999)}",
@@ -11231,7 +11231,7 @@ class AdvancedFingerprinting2025:
         """Generate Android Chrome browser profile"""
         chrome_version = random.choice([131, 132, 133, 134, 135, 136])
         chrome_full = f"{chrome_version}.0.{random.randint(6778, 6998)}.{random.randint(0, 250)}"
-        android_version = random.choice(["13", "14", "15"])
+        android_version = random.choice(["14", "15"])  # Android 14-15 (2024-2025)
         device_model = random.choice([
             "SM-S928B", "SM-S918B", "SM-A546B", 
             "Pixel 8", "Pixel 7 Pro",
