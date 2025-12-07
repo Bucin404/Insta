@@ -14621,7 +14621,8 @@ class AdvancedSessionManager2025:
     def create_session(self, fingerprint: Dict[str, Any], 
                       behavior_profile: Dict[str, Any],
                       ip_config: Dict[str, Any],
-                      webrtc_fingerprint: Optional[Dict[str, Any]] = None) -> str:
+                      webrtc_fingerprint: Optional[Dict[str, Any]] = None,
+                      country: Optional[str] = None) -> str:
         """Create new session dengan semua ID yang konsisten"""
         session_id = f"sess_{self.session_counter:08d}_{int(time.time())}"
         self.session_counter += 1
@@ -14666,7 +14667,8 @@ class AdvancedSessionManager2025:
                 "device_type": fingerprint.get("device_type", "desktop"),
                 "location": fingerprint.get("location", {}).get("city", "Jakarta"),
                 "isp": ip_config.get("isp_info", {}).get("isp", "telkomsel"),
-                "connection_type": ip_config.get("connection_type", "wifi")
+                "connection_type": ip_config.get("connection_type", "wifi"),
+                "country": country or ip_config.get("country", "ID")
             }
         }
         
