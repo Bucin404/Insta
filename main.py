@@ -7722,8 +7722,9 @@ class AdvancedIPStealthSystem2025:
             # Fallback to hardcoded list
             all_countries = ["US", "AU", "CA", "GB", "DE", "FR", "JP", "KR", "SG", "NL", "NZ", "IT", "ES", "MX", "BR", "TH", "MY", "PH", "VN", "IN", "ID"]
         
-        # TRULY RANDOM - equal weights for all countries
-        selected_countries = random.sample(all_countries, min(5, len(all_countries)))
+        # TRULY RANDOM - select 15-20 countries to maximize database utilization (61 countries available)
+        num_countries = min(random.randint(15, 20), len(all_countries))
+        selected_countries = random.sample(all_countries, num_countries)
         
         print(f"{cyan}    Selected countries (RANDOM): {selected_countries}{reset}")
         
@@ -7775,10 +7776,10 @@ class AdvancedIPStealthSystem2025:
         if unique_new_ips:
             self.ip_pool.extend(unique_new_ips)
             
-            # Limit pool size (keep freshest 100 IPs)
-            if len(self.ip_pool) > 100:
+            # Limit pool size (keep freshest 500 IPs to maximize database utilization)
+            if len(self.ip_pool) > 500:
                 self.ip_pool.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
-                self.ip_pool = self.ip_pool[:100]
+                self.ip_pool = self.ip_pool[:500]
             
             print(f"{hijau}✅  Added {len(unique_new_ips)} fresh IPs | Total pool: {len(self.ip_pool)}{reset}")
             
