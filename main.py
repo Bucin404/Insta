@@ -18378,9 +18378,9 @@ class InstagramAccountCreator2025:
                         error_type = self._analyze_error_type(data)
                         print(f"{merah}    Account creation failed: {error_type}{reset}")
                         
-                        # If IP block, don't try other endpoint - need new session
+                        # If IP block, rotate IP and retry with SAME session
                         if error_type == "ip_block":
-                            print(f"{merah}❌  IP blocked - need new session{reset}")
+                            print(f"{amarelo}⚠️  IP blocked - rotating to new IP...{reset}")
                             
                             # Save blocked IP
                             try:
@@ -18390,11 +18390,43 @@ class InstagramAccountCreator2025:
                                 current_country = ip_config.get("country", "ID")
                                 if current_ip:
                                     save_blocked_ip(current_ip, current_isp, current_country, "ip_block")
+                                    print(f"    {cyan}🚫 Saved BLOCKED IP: {current_ip} ({current_isp}) [{current_country}] - Reason: ip_block → blocked_ips.json{reset}")
                             except:
                                 pass
                             
-                            result["error_type"] = "ip_block"
-                            return result  # Exit immediately on IP block
+                            # ROTATE IP within same session
+                            print(f"{cyan}🔄  AUTO IP ROTATION triggered - Reason: ip_block_403{reset}")
+                            old_ip = session.get("ip_config", {}).get("ip", "unknown")
+                            
+                            # Get new IP from pool
+                            connection_type = session.get("connection_type", "mobile")
+                            target_country = session.get("country", "ID")
+                            new_ip_config = self.ip_stealth_system.get_fresh_ip(connection_type, target_country)
+                            
+                            if new_ip_config:
+                                # Update session with new IP
+                                session["ip_config"] = new_ip_config
+                                session["ip"] = new_ip_config
+                                
+                                # Regenerate ALL fingerprints for new IP
+                                session["fingerprint"] = self.ip_stealth_system._generate_device_fingerprint(
+                                    session.get("device_type", "mobile"),
+                                    session.get("os_version", ""),
+                                    session.get("browser_version", "")
+                                )
+                                
+                                new_ip = new_ip_config.get("ip", "unknown")
+                                print(f"    {hijau}✅  IP rotated successfully: {old_ip} → {new_ip}{reset}")
+                                print(f"    {amarelo}Waiting 8s before retry with new IP...{reset}")
+                                time.sleep(8)
+                                
+                                # Retry account creation with NEW IP but SAME session
+                                print(f"    {cyan}🔄  Retrying account creation with new IP...{reset}")
+                                continue  # Go back and retry this endpoint with new IP
+                            else:
+                                print(f"{merah}    ❌  Failed to get new IP - returning error{reset}")
+                                result["error_type"] = "ip_block"
+                                return result
                         # For other errors, try next endpoint
                         continue
                         
