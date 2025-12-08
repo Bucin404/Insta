@@ -1203,27 +1203,112 @@ class UnifiedSessionManager2025:
         return session
     
     def _load_country_database_session(self) -> Dict[str, Any]:
-        """Load comprehensive country database from JSON file"""
+        """Load comprehensive country database from JSON file with validation"""
         try:
             db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "country_database.json")
-            if os.path.exists(db_path):
-                with open(db_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-        except Exception:
-            pass
-        return {"countries": {}}
+            if not os.path.exists(db_path):
+                logger.warning(f"Country database not found at {db_path}, using fallback data")
+                return self._get_fallback_country_database()
+            
+            with open(db_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # Validate database structure
+            if not isinstance(data, dict) or "countries" not in data:
+                logger.error("Invalid country database structure, using fallback")
+                return self._get_fallback_country_database()
+            
+            # Validate that we have at least one country with proper structure
+            countries = data.get("countries", {})
+            if not countries:
+                logger.warning("No countries found in database, using fallback")
+                return self._get_fallback_country_database()
+            
+            # Validate all countries to ensure schema consistency
+            required_fields = ["name", "language", "timezone", "locale", "currency", "isps", "cities", "devices"]
+            for country_code, country_data in countries.items():
+                if not all(field in country_data for field in required_fields):
+                    logger.error(f"Country {country_code} missing required fields, using fallback")
+                    return self._get_fallback_country_database()
+                
+                # Validate ISPs structure
+                if "mobile" not in country_data["isps"] and "broadband" not in country_data["isps"]:
+                    logger.error(f"Country {country_code} has no ISPs defined, using fallback")
+                    return self._get_fallback_country_database()
+            
+            logger.info(f"Successfully loaded and validated country database with {len(countries)} countries")
+            return data
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse country database JSON: {e}, using fallback")
+            return self._get_fallback_country_database()
+        except Exception as e:
+            logger.error(f"Error loading country database: {e}, using fallback")
+            return self._get_fallback_country_database()
+    
+    def _get_fallback_country_database(self) -> Dict[str, Any]:
+        """Get fallback country database when main database fails to load"""
+        return {
+            "countries": {
+                "ID": {
+                    "name": "Indonesia",
+                    "language": "id-ID",
+                    "timezone": "Asia/Jakarta",
+                    "locale": "id_ID",
+                    "currency": "IDR",
+                    "isps": {
+                        "mobile": {
+                            "telkomsel": {
+                                "asn": "AS7713",
+                                "name": "Telkomsel",
+                                "ranges": ["114.120.0.0/13", "36.64.0.0/11", "180.240.0.0/13"]
+                            }
+                        },
+                        "broadband": {
+                            "indihome": {
+                                "asn": "AS7713",
+                                "name": "IndiHome",
+                                "ranges": ["180.244.0.0/14", "125.160.0.0/12"]
+                            }
+                        }
+                    },
+                    "cities": [
+                        {"name": "Jakarta", "lat": -6.2088, "lon": 106.8456},
+                        {"name": "Surabaya", "lat": -7.2575, "lon": 112.7521}
+                    ],
+                    "devices": {
+                        "mobile": ["Samsung Galaxy A54", "Xiaomi Redmi Note 12", "OPPO A78"],
+                        "desktop": ["ASUS VivoBook", "Lenovo IdeaPad", "HP 14s"]
+                    }
+                }
+            }
+        }
     
     def _generate_android_platform_for_country(self, country: str, country_data: Dict) -> Dict[str, Any]:
         """Generate Android platform info specific to country"""
-        devices = country_data.get("devices", {}).get("mobile", ["Samsung Galaxy A54"])
-        device = random.choice(devices)
+        devices = country_data.get("devices", {}).get("mobile", {})
+        
+        # Handle both dict (new format with user_agent) and list (old format)
+        if isinstance(devices, dict):
+            if not devices:
+                devices = {"Samsung Galaxy A54": {"user_agent": "Mozilla/5.0 (Linux; Android 13; SM-A546E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.112 Mobile Safari/537.36"}}
+            device_name = random.choice(list(devices.keys()))
+            device_info = devices[device_name]
+            user_agent = device_info.get("user_agent", "")
+        else:
+            # Fallback for old format (list)
+            if not devices:
+                devices = ["Samsung Galaxy A54"]
+            device_name = random.choice(devices)
+            user_agent = ""
         
         return {
             "os_type": "android",
             "os": "Android",
             "os_version": random.choice(["14", "15"]),  # Android 14, 15 (2024-2025)
-            "device": device,
-            "device_model": device.split()[-1] if " " in device else device,
+            "device": device_name,
+            "device_model": device_name.split()[-1] if " " in device_name else device_name,
+            "user_agent": user_agent,
             "country": country,
             "hardware": {
                 "ram": random.choice([6, 8, 12, 16]),
@@ -1233,11 +1318,24 @@ class UnifiedSessionManager2025:
     
     def _generate_desktop_platform_for_country(self, country: str, country_data: Dict) -> Dict[str, Any]:
         """Generate desktop platform info specific to country"""
-        devices = country_data.get("devices", {}).get("desktop", ["MacBook Pro"])
-        device = random.choice(devices)
+        devices = country_data.get("devices", {}).get("desktop", {})
+        
+        # Handle both dict (new format with user_agent) and list (old format)
+        if isinstance(devices, dict):
+            if not devices:
+                devices = {"MacBook Pro": {"user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.129 Safari/537.36"}}
+            device_name = random.choice(list(devices.keys()))
+            device_info = devices[device_name]
+            user_agent = device_info.get("user_agent", "")
+        else:
+            # Fallback for old format (list)
+            if not devices:
+                devices = ["MacBook Pro"]
+            device_name = random.choice(devices)
+            user_agent = ""
         
         # Determine OS from device name
-        if "mac" in device.lower():
+        if "mac" in device_name.lower():
             os_type = "macos"
             os_name = "macOS"
             os_version = random.choice(["14.5", "14.6", "14.7"])  # macOS Sonoma (2024-2025)
@@ -1250,8 +1348,9 @@ class UnifiedSessionManager2025:
             "os_type": os_type,
             "os": os_name,
             "os_version": os_version,
-            "device": device,
-            "device_model": device,
+            "device": device_name,
+            "device_model": device_name,
+            "user_agent": user_agent,
             "country": country,
             "hardware": {
                 "ram": random.choice([16, 32, 64]),
@@ -1310,16 +1409,28 @@ class UnifiedSessionManager2025:
         }
     
     def _generate_ip_from_cidr(self, cidr: str) -> str:
-        """Generate random IP from CIDR range"""
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
         try:
             network = ipaddress.ip_network(cidr, strict=False)
-            # Get random IP from network (avoiding first and last)
-            hosts = list(network.hosts())
-            if len(hosts) > 10:
-                # Avoid common IPs (first 5, last 5)
-                hosts = hosts[5:-5]
-            if hosts:
-                return str(random.choice(hosts))
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
+                return str(network.network_address)
+            
+            # OPTIMIZED: Don't list all IPs for large ranges
+            # Generate random IP directly using offset
+            if num_addresses > 1000:
+                # Large range - use random offset (ensure safe bounds)
+                random_offset = random.randint(10, num_addresses - 10)
+            elif num_addresses > 20:
+                # Medium range - avoid first 5 and last 5
+                random_offset = random.randint(5, num_addresses - 6)
+            else:
+                # Small range - just avoid first and last
+                random_offset = random.randint(1, max(1, num_addresses - 2))
+            
+            ip = network.network_address + random_offset
+            return str(ip)
         except Exception:
             pass
         
@@ -1773,7 +1884,16 @@ class UnifiedSessionManager2025:
         return ".".join(str(x) for x in ip_parts)
     
     def _generate_user_agent(self, platform: Dict, chrome_version: int) -> str:
-        """Generate User-Agent synchronized with platform and Chrome version"""
+        """Generate User-Agent synchronized with platform and Chrome version
+        
+        Uses pre-defined user agent from country database if available,
+        otherwise generates generic one based on platform info
+        """
+        # Use pre-defined user agent from database if available (device-specific)
+        if "user_agent" in platform and platform["user_agent"]:
+            return platform["user_agent"]
+        
+        # Fallback: generate generic user agent
         if platform["os_type"] == "android":
             return (
                 f"Mozilla/5.0 (Linux; Android {platform['os_version']}; "
@@ -2094,6 +2214,164 @@ class UnifiedSessionManager2025:
             "languages": languages,
             "locale": locale,
             "country": country,
+            # Enhanced APIs for better fingerprinting resistance
+            "battery": self._generate_battery_status(os_type),
+            "mediaDevices": self._generate_media_devices(os_type),
+            "permissions": self._generate_permissions_state(),
+            "gamepad": self._generate_gamepad_info(),
+            "sensors": self._generate_sensor_apis(os_type),
+            # Advanced consistency features for maximum realism
+            "connection_uptime": self._generate_connection_uptime(),
+            "dns_timing": self._generate_dns_timing(),
+            "tcp_sequence": self._generate_tcp_sequence(),
+            "ssl_session": self._generate_ssl_session(),
+            "http2_priority": self._generate_http2_priority(),
+            "request_timing": self._generate_request_timing(),
+            "viewport": self._generate_viewport_data(platform.get("screen_width", 1920), platform.get("screen_height", 1080)),
+            "performance": self._generate_performance_metrics(),
+            "network_info": self._generate_network_info(os_type),
+            "credentials": self._generate_credential_management(),
+        }
+    
+    def _generate_connection_uptime(self) -> Dict[str, Any]:
+        """Track realistic connection session timing"""
+        session_start = time.time() - random.uniform(300, 7200)  # 5min to 2hrs ago
+        return {
+            "session_start": session_start,
+            "uptime_seconds": time.time() - session_start,
+            "connection_type": random.choice(["4g", "wifi", "ethernet"]),
+            "downlink": round(random.uniform(1.5, 10.0), 2),  # Mbps
+            "rtt": random.randint(30, 150),  # ms
+            "effective_type": random.choice(["4g", "3g"])
+        }
+    
+    def _generate_dns_timing(self) -> Dict[str, Any]:
+        """Generate realistic DNS timing patterns"""
+        return {
+            "lookup_time": random.randint(10, 50),  # ms
+            "ttl": random.randint(60, 3600),
+            "servers": ["8.8.8.8", "8.8.4.4"],  # Common DNS
+            "cached_entries": random.randint(10, 100)
+        }
+    
+    def _generate_tcp_sequence(self) -> Dict[str, Any]:
+        """Generate realistic TCP sequence numbers"""
+        initial_seq = random.randint(100000000, 4000000000)
+        return {
+            "initial_seq": initial_seq,
+            "current_seq": initial_seq + random.randint(1000, 50000),
+            "ack_seq": random.randint(100000000, 4000000000),
+            "window_size": random.choice([64240, 65535, 32768])
+        }
+    
+    def _generate_ssl_session(self) -> Dict[str, Any]:
+        """Generate SSL session for connection reuse"""
+        return {
+            "session_id": hashlib.sha256(f"ssl_session_{time.time()}_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+            "session_ticket": hashlib.sha256(f"ticket_{time.time()}".encode()).hexdigest(),
+            "resumption_supported": True,
+            "ocsp_stapling": True
+        }
+    
+    def _generate_http2_priority(self) -> Dict[str, Any]:
+        """Generate HTTP/2 stream prioritization"""
+        return {
+            "stream_weight": random.choice([16, 32, 64, 128, 256]),
+            "stream_dependency": 0,
+            "exclusive": False,
+            "initial_window_size": 6291456
+        }
+    
+    def _generate_request_timing(self) -> Dict[str, Any]:
+        """Generate consistent request timing patterns"""
+        dns_start = 0
+        dns_end = random.randint(5, 30)
+        connect_start = dns_end
+        connect_end = connect_start + random.randint(30, 50)
+        ssl_start = connect_end
+        ssl_end = ssl_start + random.randint(50, 70)
+        send_start = ssl_end
+        send_end = send_start + random.randint(5, 10)
+        receive_start = send_end + random.randint(60, 100)
+        receive_end = receive_start + random.randint(100, 150)
+        
+        return {
+            "dns_start": dns_start,
+            "dns_end": dns_end,
+            "connect_start": connect_start,
+            "connect_end": connect_end,
+            "ssl_start": ssl_start,
+            "ssl_end": ssl_end,
+            "send_start": send_start,
+            "send_end": send_end,
+            "receive_start": receive_start,
+            "receive_end": receive_end
+        }
+    
+    def _generate_viewport_data(self, screen_width: int, screen_height: int) -> Dict[str, Any]:
+        """Generate viewport data consistent with screen"""
+        # Browser chrome reduces available space
+        chrome_height = random.choice([70, 75, 80, 85])  # Address bar + tabs
+        return {
+            "width": screen_width,
+            "height": screen_height - chrome_height,
+            "scroll_x": 0,
+            "scroll_y": 0,
+            "page_zoom": 1.0,
+            "device_pixel_ratio": random.choice([1.0, 1.25, 1.5, 2.0])
+        }
+    
+    def _generate_performance_metrics(self) -> Dict[str, Any]:
+        """Generate realistic performance metrics"""
+        nav_start = time.time() * 1000 - random.uniform(1000, 5000)
+        return {
+            "navigation_start": nav_start,
+            "fetch_start": nav_start + random.uniform(1, 10),
+            "domain_lookup_start": nav_start + random.uniform(10, 30),
+            "domain_lookup_end": nav_start + random.uniform(30, 60),
+            "connect_start": nav_start + random.uniform(60, 100),
+            "connect_end": nav_start + random.uniform(100, 200),
+            "request_start": nav_start + random.uniform(200, 300),
+            "response_start": nav_start + random.uniform(300, 500),
+            "response_end": nav_start + random.uniform(500, 800),
+            "dom_interactive": nav_start + random.uniform(800, 1200),
+            "dom_complete": nav_start + random.uniform(1200, 2000),
+            "load_event_end": nav_start + random.uniform(2000, 3000),
+            "memory": {
+                "used_js_heap_size": random.randint(10000000, 50000000),
+                "total_js_heap_size": random.randint(50000000, 100000000),
+                "js_heap_size_limit": random.randint(2000000000, 4000000000)
+            }
+        }
+    
+    def _generate_network_info(self, os_type: str) -> Dict[str, Any]:
+        """Generate Network Information API data"""
+        if os_type in ["android", "ios"]:
+            return {
+                "type": random.choice(["cellular", "wifi"]),
+                "effectiveType": random.choice(["4g", "3g", "slow-2g"]),
+                "downlink": round(random.uniform(1.0, 10.0), 2),
+                "downlinkMax": round(random.uniform(10.0, 50.0), 2),
+                "rtt": random.randint(50, 200),
+                "saveData": False
+            }
+        else:
+            return {
+                "type": "ethernet",
+                "effectiveType": "4g",
+                "downlink": round(random.uniform(5.0, 50.0), 2),
+                "downlinkMax": round(random.uniform(50.0, 100.0), 2),
+                "rtt": random.randint(10, 50),
+                "saveData": False
+            }
+    
+    def _generate_credential_management(self) -> Dict[str, bool]:
+        """Generate Credential Management API availability"""
+        return {
+            "preventSilentAccess": True,
+            "credentials_available": True,
+            "password_credentials": True,
+            "federated_credentials": True
         }
     
     def _generate_font_list(self, os_type: str) -> List[str]:
@@ -2117,6 +2395,112 @@ class UnifiedSessionManager2025:
                 {"name": "Chrome PDF Viewer", "filename": "mhjfbmdgcfjbbpaeojofohoefgiehjai"},
                 {"name": "Chromium PDF Viewer", "filename": "internal-pdf-viewer"},
             ]
+    
+    def _generate_battery_status(self, os_type: str) -> Dict[str, Any]:
+        """Generate realistic battery status for mobile devices"""
+        if os_type in ["android", "ios"]:
+            charging = random.choice([True, False])
+            return {
+                "charging": charging,
+                "chargingTime": random.randint(1800, 7200) if charging else float('inf'),
+                "dischargingTime": float('inf') if charging else random.randint(7200, 28800),
+                "level": round(random.uniform(0.20, 0.95), 2),
+            }
+        else:
+            # Desktop usually doesn't expose battery
+            return None
+    
+    def _generate_media_devices(self, os_type: str) -> Dict[str, Any]:
+        """Generate realistic media devices enumeration"""
+        devices = []
+        
+        # Camera devices
+        if os_type in ["android", "ios"]:
+            devices.extend([
+                {
+                    "deviceId": hashlib.md5(f"front_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                    "kind": "videoinput",
+                    "label": "Front Camera" if os_type == "android" else "Front Camera (Built-in)",
+                    "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+                },
+                {
+                    "deviceId": hashlib.md5(f"back_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                    "kind": "videoinput",
+                    "label": "Back Camera" if os_type == "android" else "Back Camera (Built-in)",
+                    "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+                },
+            ])
+        else:
+            devices.append({
+                "deviceId": hashlib.md5(f"integrated_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                "kind": "videoinput",
+                "label": "Integrated Camera (Built-in)",
+                "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+            })
+        
+        # Microphones
+        mic_labels = ["Default - Microphone", "Built-in Microphone"] if os_type not in ["android", "ios"] else ["Microphone"]
+        for label in mic_labels[:1]:  # Usually just 1 mic
+            devices.append({
+                "deviceId": hashlib.md5(f"microphone_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                "kind": "audioinput",
+                "label": label,
+                "groupId": hashlib.md5(f"audio_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+            })
+        
+        # Speakers
+        devices.append({
+            "deviceId": hashlib.md5(f"speaker_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+            "kind": "audiooutput",
+            "label": "Default - Speaker" if os_type not in ["android", "ios"] else "Speaker",
+            "groupId": hashlib.md5(f"audio_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+        })
+        
+        return {
+            "devices": devices,
+            "supported": True
+        }
+    
+    def _generate_permissions_state(self) -> Dict[str, str]:
+        """Generate realistic permissions state"""
+        return {
+            "geolocation": random.choice(["granted", "denied", "prompt"]),
+            "notifications": random.choice(["granted", "denied", "prompt"]),
+            "camera": random.choice(["denied", "prompt"]),  # Usually not granted by default
+            "microphone": random.choice(["denied", "prompt"]),  # Usually not granted by default
+            "clipboard-read": "prompt",
+            "clipboard-write": "granted",
+        }
+    
+    def _generate_gamepad_info(self) -> Dict[str, Any]:
+        """Generate gamepad information (usually empty but should be available)"""
+        # Most users don't have gamepads, but API should be available
+        return {
+            "supported": True,
+            "gamepads": [],  # Empty array is normal
+            "timestamp": time.time() * 1000,
+        }
+    
+    def _generate_sensor_apis(self, os_type: str) -> Dict[str, Any]:
+        """Generate sensor API availability (mobile devices)"""
+        if os_type in ["android", "ios"]:
+            return {
+                "deviceorientation": True,
+                "devicemotion": True,
+                "accelerometer": True,
+                "gyroscope": True,
+                "magnetometer": os_type == "android",  # iOS usually doesn't expose this
+                "ambient_light": os_type == "android",
+            }
+        else:
+            return {
+                "deviceorientation": False,
+                "devicemotion": False,
+                "accelerometer": False,
+                "gyroscope": False,
+                "magnetometer": False,
+                "ambient_light": False,
+            }
     
     def _generate_initial_cookies(self, session_id: str) -> Dict[str, str]:
         """Generate valid Instagram session cookies
@@ -4157,26 +4541,50 @@ class UltraStealthIPGenerator2025:
         return {"countries": {}}
     
     def _generate_ip_from_cidr_range(self, cidr: str) -> Optional[str]:
-        """Generate random IP from CIDR range"""
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
         try:
             network = ipaddress.ip_network(cidr, strict=False)
-            # Get all hosts in the network
-            hosts = list(network.hosts())
-            if not hosts:
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
                 return None
             
-            # Exclude common server IPs
+            # OPTIMIZED: Don't list all IPs, just generate random one directly
+            # For large ranges (e.g., /12 = 1M IPs), listing all would be slow
+            max_attempts = 20
             excluded_octets = {0, 1, 2, 100, 128, 200, 254, 255}
-            valid_hosts = [h for h in hosts if int(str(h).split('.')[-1]) not in excluded_octets]
             
-            if not valid_hosts:
-                valid_hosts = hosts
+            for attempt in range(max_attempts):
+                # Generate random offset within range
+                # Skip first (network) and last (broadcast) addresses
+                if num_addresses > 1000:
+                    # For large ranges, ensure safe bounds (min 20 margin)
+                    random_offset = random.randint(10, max(20, num_addresses - 10))
+                else:
+                    # For small ranges, avoid network/broadcast
+                    random_offset = random.randint(1, num_addresses - 2)
+                
+                # Add additional entropy for uniqueness (unbiased)
+                max_entropy = max(1, num_addresses // 100)
+                extra_entropy = random.randint(0, max_entropy - 1) if max_entropy > 1 else 0
+                final_offset = min(random_offset + extra_entropy, num_addresses - 2)
+                
+                ip = network.network_address + max(1, final_offset)
+                ip_str = str(ip)
+                
+                # Check if last octet is good (avoid common server IPs)
+                last_octet = int(ip_str.split('.')[-1])
+                if last_octet not in excluded_octets:
+                    return ip_str
             
-            # Add timestamp-based entropy
-            timestamp_entropy = int(time.time() * 1000) % len(valid_hosts)
-            random_index = (random.randint(0, len(valid_hosts) - 1) + timestamp_entropy) % len(valid_hosts)
+            # If all attempts failed, just return a random IP without filtering
+            if num_addresses > 1000:
+                random_offset = random.randint(10, max(20, num_addresses - 10))
+            else:
+                random_offset = random.randint(1, num_addresses - 2)
+            ip = network.network_address + random_offset
+            return str(ip)
             
-            return str(valid_hosts[random_index])
         except Exception as e:
             print(f"{kuning}    Warning: Could not parse CIDR {cidr}: {e}{reset}")
             return None
@@ -5350,6 +5758,38 @@ class AdvancedIPStealthSystem2025:
             "oxygen": self._generate_oxygen_ips,
         }
     
+    def _generate_ip_from_cidr(self, cidr: str) -> str:
+        """Generate random IP from CIDR range - OPTIMIZED for large ranges"""
+        try:
+            network = ipaddress.ip_network(cidr, strict=False)
+            num_addresses = network.num_addresses
+            
+            if num_addresses < 2:
+                return str(network.network_address)
+            
+            # OPTIMIZED: Don't list all IPs for large ranges
+            # Generate random IP directly using offset
+            if num_addresses > 1000:
+                # Large range - use random offset (ensure safe bounds)
+                random_offset = random.randint(10, num_addresses - 10)
+            elif num_addresses > 20:
+                # Medium range - avoid first 5 and last 5
+                random_offset = random.randint(5, num_addresses - 6)
+            else:
+                # Small range - just avoid first and last
+                random_offset = random.randint(1, max(1, num_addresses - 2))
+            
+            ip = network.network_address + random_offset
+            return str(ip)
+        except Exception:
+            pass
+        
+        # Fallback: parse CIDR and generate
+        parts = cidr.split('/')[0].split('.')
+        while len(parts) < 4:
+            parts.append(str(random.randint(2, 253)))
+        return '.'.join(parts[:4])
+    
     def _load_country_database(self) -> Dict[str, Any]:
         """Load comprehensive country database from JSON file"""
         try:
@@ -5623,62 +6063,106 @@ class AdvancedIPStealthSystem2025:
         return self._generate_country_ips("IN", ["jio", "airtel_in", "vi_in"])
     
     def _generate_country_ips(self, country_code: str, isp_list: List[str]) -> List[Dict[str, Any]]:
-        """Generate IPs for a specific country with full synchronization"""
-        country_config = self._get_country_config().get(country_code)
-        if not country_config:
+        """Generate IPs for a specific country using country_database.json - OPTIMIZED"""
+        # Load from JSON database instead of hardcoded config
+        country_db = self._load_country_database()
+        country_data = country_db.get("countries", {}).get(country_code)
+        
+        if not country_data:
+            print(f"{kuning}    No config for {country_code} in database{reset}")
             return []
         
         ip_pool = []
+        
         for isp_name in isp_list:
-            isp_config = country_config["isps"].get(isp_name)
+            # Check both mobile and broadband ISPs
+            isp_config = None
+            isp_type = None
+            
+            mobile_isps = country_data.get("isps", {}).get("mobile", {})
+            if isp_name in mobile_isps:
+                isp_config = mobile_isps[isp_name]
+                isp_type = "mobile"
+            else:
+                broadband_isps = country_data.get("isps", {}).get("broadband", {})
+                if isp_name in broadband_isps:
+                    isp_config = broadband_isps[isp_name]
+                    isp_type = "broadband"
+            
             if not isp_config:
+                print(f"{kuning}    ISP {isp_name} not found in {country_code}{reset}")
                 continue
             
-            for _ in range(random.randint(2, 5)):
-                # Generate IP
-                prefix = random.choice(isp_config["prefixes"])
-                parts = prefix.split('.')
-                while len(parts) < 4:
-                    parts.append(str(random.randint(2, 253)))
-                ip = '.'.join(parts[:4])
-                
-                # Validate
-                if not self._validate_ip_format_enhanced(ip):
+            # Get IP ranges from database
+            ip_ranges = isp_config.get("ranges", [])
+            if not ip_ranges:
+                print(f"{kuning}    No IP ranges for {isp_name} in {country_code}{reset}")
+                continue
+            
+            # Generate multiple IPs from ranges (increased for better yield)
+            for _ in range(random.randint(15, 25)):
+                try:
+                    # Select random range
+                    selected_range = random.choice(ip_ranges)
+                    
+                    # Generate IP from CIDR range (using optimized function)
+                    ip = self._generate_ip_from_cidr(selected_range)
+                    
+                    if not ip or not self._validate_ip_format_enhanced(ip):
+                        continue
+                    
+                    # Select random city
+                    cities = country_data.get("cities", [])
+                    if not cities:
+                        cities = [{"name": "Unknown", "lat": 0, "lon": 0}]
+                    city = random.choice(cities)
+                    
+                    # Select random device
+                    devices = country_data.get("devices", {})
+                    device_type = random.choice(["mobile", "desktop"])
+                    device_dict = devices.get(device_type, {})
+                    
+                    device_name = "Unknown Device"
+                    device_user_agent = None
+                    
+                    if isinstance(device_dict, dict) and device_dict:
+                        # Optimize: store keys list once
+                        device_keys = list(device_dict.keys())
+                        device_name = random.choice(device_keys)
+                        device_info = device_dict.get(device_name, {})
+                        # GET USER AGENT FROM DATABASE
+                        device_user_agent = device_info.get("user_agent")
+                    
+                    # Create synchronized profile
+                    ip_info = {
+                        "ip": ip,
+                        "country": country_code,
+                        "country_name": country_data.get("name", country_code),
+                        "isp": isp_name,
+                        "asn": isp_config.get("asn", ""),
+                        "as_name": isp_config.get("name", isp_name),
+                        "city": city.get("name", "Unknown"),
+                        "region": city.get("name", "Unknown"),
+                        "latitude": city.get("lat", 0),
+                        "longitude": city.get("lon", 0),
+                        "timezone": country_data.get("timezone", "UTC"),
+                        "language": country_data.get("language", "en"),
+                        "connection_type": isp_type,
+                        "device_model": device_name,
+                        "device_type": device_type,
+                        "user_agent": device_user_agent,  # ADD USER AGENT FROM DATABASE
+                        "health_score": random.randint(85, 98),
+                        "last_used": 0,
+                        "use_count": 0,
+                        "generated_at": time.time(),
+                        "timestamp": time.time()
+                    }
+                    
+                    ip_pool.append(ip_info)
+                    
+                except Exception as e:
+                    print(f"{kuning}    Error generating IP from {selected_range}: {type(e).__name__}: {str(e)}{reset}")
                     continue
-                
-                # Select city
-                city = random.choice(country_config["cities"])
-                
-                # Select device matching country
-                device_brand = random.choice(country_config["devices"])
-                device_model = random.choice(device_brand["models"])
-                
-                # Create synchronized profile
-                ip_info = {
-                    "ip": ip,
-                    "country": country_code,
-                    "country_name": country_config["name"],
-                    "isp": isp_name,
-                    "asn": isp_config["asn"],
-                    "as_name": isp_config["as_name"],
-                    "city": city["name"],
-                    "region": city["region"],
-                    "latitude": city["lat"],
-                    "longitude": city["lon"],
-                    "timezone": country_config["timezone"],
-                    "language": country_config["language"],
-                    "connection_type": isp_config["type"],
-                    "mcc": isp_config.get("mcc", ""),
-                    "mnc": isp_config.get("mnc", ""),
-                    "device_brand": device_brand["brand"],
-                    "device_model": device_model,
-                    "health_score": random.randint(85, 98),
-                    "last_used": 0,
-                    "use_count": 0,
-                    "generated_at": time.time()
-                }
-                
-                ip_pool.append(ip_info)
         
         return ip_pool
     
@@ -5714,9 +6198,9 @@ class AdvancedIPStealthSystem2025:
             if not self._verify_residential_ip(ip, isp_name):
                 continue
             
-            # Enhanced validation with very strict mode
+            # Enhanced validation with relaxed threshold (65 is realistic for legitimate residential/mobile IPs)
             validation = self.validator.validate(ip, strict=True)
-            if not validation["valid"] or validation["score"] < 85:  # Raised to 85
+            if not validation["valid"] or validation["score"] < 65:  # Lowered from 75 to 65 for better fresh IP yield
                 continue
             
             # Check all blacklists
@@ -7502,8 +7986,9 @@ class AdvancedIPStealthSystem2025:
             # Fallback to hardcoded list
             all_countries = ["US", "AU", "CA", "GB", "DE", "FR", "JP", "KR", "SG", "NL", "NZ", "IT", "ES", "MX", "BR", "TH", "MY", "PH", "VN", "IN", "ID"]
         
-        # TRULY RANDOM - equal weights for all countries
-        selected_countries = random.sample(all_countries, min(5, len(all_countries)))
+        # TRULY RANDOM - select 15-20 countries to maximize database utilization (61 countries available)
+        num_countries = min(random.randint(15, 20), len(all_countries))
+        selected_countries = random.sample(all_countries, num_countries)
         
         print(f"{cyan}    Selected countries (RANDOM): {selected_countries}{reset}")
         
@@ -7528,11 +8013,11 @@ class AdvancedIPStealthSystem2025:
                         isp_ips = self._generate_dynamic_isp_ips(isp)
                     
                     if isp_ips:
-                        # Validate each IP
+                        # Validate each IP (relaxed threshold for more fresh IPs)
                         validated_ips = []
                         for ip_info in isp_ips:
                             validation = self.validator.validate(ip_info["ip"], strict=True)
-                            if validation["valid"] and validation["score"] >= 70:
+                            if validation["valid"] and validation["score"] >= 65:
                                 ip_info["validation_score"] = validation["score"]
                                 ip_info["last_validated"] = time.time()
                                 ip_info["country"] = country
@@ -7545,7 +8030,7 @@ class AdvancedIPStealthSystem2025:
                             print(f"{kuning}    No validated IPs for {isp}{reset}")
                             
                 except Exception as e:
-                    print(f"{merah}    Error generating {isp} IPs: {str(e)[:50]}{reset}")
+                    print(f"{merah}    Error generating {isp} IPs: {type(e).__name__}: {str(e)}{reset}")
                     continue
         
         # Add to pool with deduplication
@@ -7555,10 +8040,10 @@ class AdvancedIPStealthSystem2025:
         if unique_new_ips:
             self.ip_pool.extend(unique_new_ips)
             
-            # Limit pool size (keep freshest 100 IPs)
-            if len(self.ip_pool) > 100:
+            # Limit pool size (keep freshest 500 IPs to maximize database utilization)
+            if len(self.ip_pool) > 500:
                 self.ip_pool.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
-                self.ip_pool = self.ip_pool[:100]
+                self.ip_pool = self.ip_pool[:500]
             
             print(f"{hijau}✅  Added {len(unique_new_ips)} fresh IPs | Total pool: {len(self.ip_pool)}{reset}")
             
@@ -15841,9 +16326,15 @@ class RequestOrchestrator2025:
             else:
                 await self.circuit_breaker.record_failure(session_id, request_data["url"])
                 
-                # Handle rate limit specifically - FIXED
+                # AUTO IP ROTATION FOR RATE LIMITS, BLOCKS, AND BAD REQUESTS - NEW
+                should_rotate_ip = False
+                rotation_reason = ""
+                
+                # Handle rate limit (429)
                 if response["status"] == 429:
-                    print(f"{merah}⚠️  Rate limit detected for session {session_id[:8]}...{reset}")
+                    print(f"{merah}⚠️  Rate limit detected (429) for session {session_id[:8]}...{reset}")
+                    should_rotate_ip = True
+                    rotation_reason = "rate_limit_429"
                     
                     # Update session state
                     self.session_manager.update_session_state(session_id, {
@@ -15854,9 +16345,65 @@ class RequestOrchestrator2025:
                                 .get("rate_limit_hits", 0) + 1
                         }
                     })
+                
+                # Handle bad request (400) - often indicates IP is flagged
+                elif response["status"] == 400:
+                    print(f"{merah}⚠️  Bad request (400) detected for session {session_id[:8]}...{reset}")
+                    # Check if this is IP-related (multiple 400s in short time)
+                    session_state = self.session_manager.session_states.get(session_id, {})
+                    bad_request_count = session_state.get("performance_metrics", {}).get("bad_request_count", 0)
                     
-                    # Trigger IP rotation jika diperlukan
-                    if self.account_creator and request_data.get("retry_count", 0) == 0:
+                    if bad_request_count >= 1:  # After 2nd bad request, rotate
+                        should_rotate_ip = True
+                        rotation_reason = "repeated_400_errors"
+                        print(f"{kuning}    Multiple 400 errors detected, rotating IP...{reset}")
+                    
+                    # Update counter
+                    self.session_manager.update_session_state(session_id, {
+                        "error_log": "Bad request 400",
+                        "performance_metrics": {
+                            "bad_request_count": bad_request_count + 1
+                        }
+                    })
+                
+                # Handle IP block (403 with specific indicators)
+                elif response["status"] == 403:
+                    body_text = response.get("body", b"").decode('utf-8', errors='ignore').lower()
+                    if any(keyword in body_text for keyword in ["ip", "block", "banned", "restricted"]):
+                        print(f"{merah}⚠️  IP block detected (403) for session {session_id[:8]}...{reset}")
+                        should_rotate_ip = True
+                        rotation_reason = "ip_block_403"
+                    else:
+                        print(f"{kuning}⚠️  Access forbidden (403) - may need CSRF token refresh{reset}")
+                
+                # Perform auto IP rotation if needed
+                if should_rotate_ip and self.account_creator and request_data.get("retry_count", 0) == 0:
+                    print(f"{cyan}🔄  AUTO IP ROTATION triggered - Reason: {rotation_reason}{reset}")
+                    
+                    # Get current IP before rotation
+                    current_ip = session.get("ip_config", {}).get("ip", "unknown")
+                    print(f"{kuning}    Current IP: {current_ip} - Switching...{reset}")
+                    
+                    # Mark current IP as problematic if it's a block or repeated errors
+                    if rotation_reason in ["ip_block_403", "repeated_400_errors"]:
+                        current_country = session.get("ip_config", {}).get("country", "unknown")
+                        current_isp = session.get("ip_config", {}).get("isp", "unknown")
+                        save_blocked_ip(current_ip, current_isp, current_country, rotation_reason)
+                        print(f"{merah}    Marked IP {current_ip} as blocked{reset}")
+                    
+                    # Rotate IP with full fingerprint regeneration
+                    success = await self.account_creator.rotate_ip_with_fingerprint(session_id)
+                    
+                    if success:
+                        new_ip = self.session_manager.get_session(session_id).get("ip_config", {}).get("ip", "unknown")
+                        print(f"{hijau}✅  IP rotated successfully: {current_ip} → {new_ip}{reset}")
+                        
+                        # Wait before retry
+                        wait_time = random.uniform(5, 15)
+                        print(f"{cyan}    Waiting {wait_time:.1f}s before retry...{reset}")
+                        await asyncio.sleep(wait_time)
+                    else:
+                        print(f"{merah}❌  IP rotation failed, handling with delay...{reset}")
                         await self._handle_rate_limit(session_id, request_data)
             
             # Cache response jika perlu
@@ -17831,9 +18378,9 @@ class InstagramAccountCreator2025:
                         error_type = self._analyze_error_type(data)
                         print(f"{merah}    Account creation failed: {error_type}{reset}")
                         
-                        # If IP block, don't try other endpoint - need new session
+                        # If IP block, rotate IP and retry with SAME session
                         if error_type == "ip_block":
-                            print(f"{merah}❌  IP blocked - need new session{reset}")
+                            print(f"{kuning}⚠️  IP blocked - rotating to new IP...{reset}")
                             
                             # Save blocked IP
                             try:
@@ -17843,11 +18390,43 @@ class InstagramAccountCreator2025:
                                 current_country = ip_config.get("country", "ID")
                                 if current_ip:
                                     save_blocked_ip(current_ip, current_isp, current_country, "ip_block")
+                                    print(f"    {cyan}🚫 Saved BLOCKED IP: {current_ip} ({current_isp}) [{current_country}] - Reason: ip_block → blocked_ips.json{reset}")
                             except:
                                 pass
                             
-                            result["error_type"] = "ip_block"
-                            return result  # Exit immediately on IP block
+                            # ROTATE IP within same session
+                            print(f"{cyan}🔄  AUTO IP ROTATION triggered - Reason: ip_block_403{reset}")
+                            old_ip = session.get("ip_config", {}).get("ip", "unknown")
+                            
+                            # Get new IP from pool
+                            connection_type = session.get("connection_type", "mobile")
+                            target_country = session.get("country", "ID")
+                            new_ip_config = self.ip_stealth_system.get_fresh_ip(connection_type, target_country)
+                            
+                            if new_ip_config:
+                                # Update session with new IP
+                                session["ip_config"] = new_ip_config
+                                session["ip"] = new_ip_config
+                                
+                                # Regenerate ALL fingerprints for new IP
+                                session["fingerprint"] = self.ip_stealth_system._generate_device_fingerprint(
+                                    session.get("device_type", "mobile"),
+                                    session.get("os_version", ""),
+                                    session.get("browser_version", "")
+                                )
+                                
+                                new_ip = new_ip_config.get("ip", "unknown")
+                                print(f"    {hijau}✅  IP rotated successfully: {old_ip} → {new_ip}{reset}")
+                                print(f"    {kuning}Waiting 8s before retry with new IP...{reset}")
+                                time.sleep(8)
+                                
+                                # Retry account creation with NEW IP but SAME session
+                                print(f"    {cyan}🔄  Retrying account creation with new IP...{reset}")
+                                continue  # Go back and retry this endpoint with new IP
+                            else:
+                                print(f"{merah}    ❌  Failed to get new IP - returning error{reset}")
+                                result["error_type"] = "ip_block"
+                                return result
                         # For other errors, try next endpoint
                         continue
                         
