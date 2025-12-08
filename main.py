@@ -18380,7 +18380,7 @@ class InstagramAccountCreator2025:
                         
                         # If IP block, rotate IP and retry with SAME session
                         if error_type == "ip_block":
-                            print(f"{amarelo}⚠️  IP blocked - rotating to new IP...{reset}")
+                            print(f"{kuning}⚠️  IP blocked - rotating to new IP...{reset}")
                             
                             # Save blocked IP
                             try:
@@ -18417,7 +18417,7 @@ class InstagramAccountCreator2025:
                                 
                                 new_ip = new_ip_config.get("ip", "unknown")
                                 print(f"    {hijau}✅  IP rotated successfully: {old_ip} → {new_ip}{reset}")
-                                print(f"    {amarelo}Waiting 8s before retry with new IP...{reset}")
+                                print(f"    {kuning}Waiting 8s before retry with new IP...{reset}")
                                 time.sleep(8)
                                 
                                 # Retry account creation with NEW IP but SAME session
