@@ -883,7 +883,7 @@
       },
       "cities": [
         {
-          "name": "São Paulo",
+          "name": "S\u00e3o Paulo",
           "lat": -23.5505,
           "lon": -46.6333
         },
@@ -1213,7 +1213,10 @@
             "name": "Telkomsel",
             "ranges": [
               "114.120.0.0/13",
-              "36.64.0.0/11"
+              "36.64.0.0/11",
+              "110.136.0.0/13",
+              "120.188.0.0/14",
+              "103.47.132.0/22"
             ]
           },
           "indosat": {
@@ -1221,14 +1224,18 @@
             "name": "Indosat",
             "ranges": [
               "114.4.0.0/14",
-              "180.214.0.0/15"
+              "180.214.0.0/15",
+              "112.78.0.0/15",
+              "103.10.64.0/18"
             ]
           },
           "xl": {
             "asn": "AS24203",
             "name": "XL Axiata",
             "ranges": [
-              "112.215.0.0/16"
+              "112.215.0.0/16",
+              "36.80.0.0/12",
+              "103.106.8.0/22"
             ]
           }
         },
@@ -1238,7 +1245,9 @@
             "name": "IndiHome",
             "ranges": [
               "180.244.0.0/14",
-              "125.160.0.0/12"
+              "125.160.0.0/12",
+              "114.4.0.0/14",
+              "103.140.0.0/14"
             ]
           },
           "biznet": {
@@ -1261,18 +1270,66 @@
           "name": "Surabaya",
           "lat": -7.2575,
           "lon": 112.7521
+        },
+        {
+          "name": "Bandung",
+          "lat": -6.9175,
+          "lon": 107.6191
+        },
+        {
+          "name": "Medan",
+          "lat": 3.5952,
+          "lon": 98.6722
+        },
+        {
+          "name": "Semarang",
+          "lat": -6.9667,
+          "lon": 110.4167
+        },
+        {
+          "name": "Makassar",
+          "lat": -5.1477,
+          "lon": 119.4327
+        },
+        {
+          "name": "Palembang",
+          "lat": -2.9761,
+          "lon": 104.7754
+        },
+        {
+          "name": "Tangerang",
+          "lat": -6.1783,
+          "lon": 106.6319
         }
       ],
       "devices": {
         "mobile": [
-          "Samsung Galaxy A54",
+          "OPPO A17k",
+          "OPPO A57",
+          "OPPO A77s",
+          "OPPO Reno8",
+          "OPPO Find N2 Flip",
+          "Vivo Y16",
+          "Vivo Y22",
+          "Vivo Y35",
+          "Vivo V27",
           "Xiaomi Redmi Note 12",
-          "OPPO A78",
-          "Vivo V29"
+          "Xiaomi Redmi 12",
+          "Xiaomi Poco M5",
+          "Xiaomi 13T",
+          "Samsung Galaxy A14",
+          "Samsung Galaxy A24",
+          "Samsung Galaxy A54",
+          "realme C35",
+          "realme 10",
+          "Infinix Hot 20",
+          "Tecno Spark 10"
         ],
         "desktop": [
-          "ASUS VivoBook",
-          "Lenovo IdeaPad"
+          "ASUS VivoBook 14",
+          "Lenovo IdeaPad Slim 3",
+          "HP 14s",
+          "Acer Aspire 3"
         ]
       }
     },
@@ -1335,7 +1392,7 @@
           "lon": -58.3816
         },
         {
-          "name": "Córdoba",
+          "name": "C\u00f3rdoba",
           "lat": -31.4201,
           "lon": -64.1888
         },
@@ -1408,7 +1465,7 @@
           "lon": -70.6693
         },
         {
-          "name": "Valparaíso",
+          "name": "Valpara\u00edso",
           "lat": -33.0472,
           "lon": -71.6127
         }
@@ -1471,12 +1528,12 @@
       },
       "cities": [
         {
-          "name": "Bogotá",
+          "name": "Bogot\u00e1",
           "lat": 4.711,
           "lon": -74.0721
         },
         {
-          "name": "Medellín",
+          "name": "Medell\u00edn",
           "lat": 6.2476,
           "lon": -75.5658
         },
@@ -1953,7 +2010,7 @@
           "lon": 11.9746
         },
         {
-          "name": "Malmö",
+          "name": "Malm\u00f6",
           "lat": 55.6049,
           "lon": 13.0038
         }
@@ -2509,7 +2566,7 @@
           },
           "turktelekom": {
             "asn": "AS9121",
-            "name": "Türk Telekom",
+            "name": "T\u00fcrk Telekom",
             "ranges": [
               "88.224.0.0/12",
               "85.96.0.0/12"
