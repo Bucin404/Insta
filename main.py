@@ -2220,6 +2220,158 @@ class UnifiedSessionManager2025:
             "permissions": self._generate_permissions_state(),
             "gamepad": self._generate_gamepad_info(),
             "sensors": self._generate_sensor_apis(os_type),
+            # Advanced consistency features for maximum realism
+            "connection_uptime": self._generate_connection_uptime(),
+            "dns_timing": self._generate_dns_timing(),
+            "tcp_sequence": self._generate_tcp_sequence(),
+            "ssl_session": self._generate_ssl_session(),
+            "http2_priority": self._generate_http2_priority(),
+            "request_timing": self._generate_request_timing(),
+            "viewport": self._generate_viewport_data(platform.get("screen_width", 1920), platform.get("screen_height", 1080)),
+            "performance": self._generate_performance_metrics(),
+            "network_info": self._generate_network_info(os_type),
+            "credentials": self._generate_credential_management(),
+        }
+    
+    def _generate_connection_uptime(self) -> Dict[str, Any]:
+        """Track realistic connection session timing"""
+        session_start = time.time() - random.uniform(300, 7200)  # 5min to 2hrs ago
+        return {
+            "session_start": session_start,
+            "uptime_seconds": time.time() - session_start,
+            "connection_type": random.choice(["4g", "wifi", "ethernet"]),
+            "downlink": round(random.uniform(1.5, 10.0), 2),  # Mbps
+            "rtt": random.randint(30, 150),  # ms
+            "effective_type": random.choice(["4g", "3g"])
+        }
+    
+    def _generate_dns_timing(self) -> Dict[str, Any]:
+        """Generate realistic DNS timing patterns"""
+        return {
+            "lookup_time": random.randint(10, 50),  # ms
+            "ttl": random.randint(60, 3600),
+            "servers": ["8.8.8.8", "8.8.4.4"],  # Common DNS
+            "cached_entries": random.randint(10, 100)
+        }
+    
+    def _generate_tcp_sequence(self) -> Dict[str, Any]:
+        """Generate realistic TCP sequence numbers"""
+        initial_seq = random.randint(100000000, 4000000000)
+        return {
+            "initial_seq": initial_seq,
+            "current_seq": initial_seq + random.randint(1000, 50000),
+            "ack_seq": random.randint(100000000, 4000000000),
+            "window_size": random.choice([64240, 65535, 32768])
+        }
+    
+    def _generate_ssl_session(self) -> Dict[str, Any]:
+        """Generate SSL session for connection reuse"""
+        return {
+            "session_id": hashlib.sha256(f"ssl_session_{time.time()}_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+            "session_ticket": hashlib.sha256(f"ticket_{time.time()}".encode()).hexdigest(),
+            "resumption_supported": True,
+            "ocsp_stapling": True
+        }
+    
+    def _generate_http2_priority(self) -> Dict[str, Any]:
+        """Generate HTTP/2 stream prioritization"""
+        return {
+            "stream_weight": random.choice([16, 32, 64, 128, 256]),
+            "stream_dependency": 0,
+            "exclusive": False,
+            "initial_window_size": 6291456
+        }
+    
+    def _generate_request_timing(self) -> Dict[str, Any]:
+        """Generate consistent request timing patterns"""
+        dns_start = 0
+        dns_end = random.randint(5, 30)
+        connect_start = dns_end
+        connect_end = connect_start + random.randint(30, 50)
+        ssl_start = connect_end
+        ssl_end = ssl_start + random.randint(50, 70)
+        send_start = ssl_end
+        send_end = send_start + random.randint(5, 10)
+        receive_start = send_end + random.randint(60, 100)
+        receive_end = receive_start + random.randint(100, 150)
+        
+        return {
+            "dns_start": dns_start,
+            "dns_end": dns_end,
+            "connect_start": connect_start,
+            "connect_end": connect_end,
+            "ssl_start": ssl_start,
+            "ssl_end": ssl_end,
+            "send_start": send_start,
+            "send_end": send_end,
+            "receive_start": receive_start,
+            "receive_end": receive_end
+        }
+    
+    def _generate_viewport_data(self, screen_width: int, screen_height: int) -> Dict[str, Any]:
+        """Generate viewport data consistent with screen"""
+        # Browser chrome reduces available space
+        chrome_height = random.choice([70, 75, 80, 85])  # Address bar + tabs
+        return {
+            "width": screen_width,
+            "height": screen_height - chrome_height,
+            "scroll_x": 0,
+            "scroll_y": 0,
+            "page_zoom": 1.0,
+            "device_pixel_ratio": random.choice([1.0, 1.25, 1.5, 2.0])
+        }
+    
+    def _generate_performance_metrics(self) -> Dict[str, Any]:
+        """Generate realistic performance metrics"""
+        nav_start = time.time() * 1000 - random.uniform(1000, 5000)
+        return {
+            "navigation_start": nav_start,
+            "fetch_start": nav_start + random.uniform(1, 10),
+            "domain_lookup_start": nav_start + random.uniform(10, 30),
+            "domain_lookup_end": nav_start + random.uniform(30, 60),
+            "connect_start": nav_start + random.uniform(60, 100),
+            "connect_end": nav_start + random.uniform(100, 200),
+            "request_start": nav_start + random.uniform(200, 300),
+            "response_start": nav_start + random.uniform(300, 500),
+            "response_end": nav_start + random.uniform(500, 800),
+            "dom_interactive": nav_start + random.uniform(800, 1200),
+            "dom_complete": nav_start + random.uniform(1200, 2000),
+            "load_event_end": nav_start + random.uniform(2000, 3000),
+            "memory": {
+                "used_js_heap_size": random.randint(10000000, 50000000),
+                "total_js_heap_size": random.randint(50000000, 100000000),
+                "js_heap_size_limit": random.randint(2000000000, 4000000000)
+            }
+        }
+    
+    def _generate_network_info(self, os_type: str) -> Dict[str, Any]:
+        """Generate Network Information API data"""
+        if os_type in ["android", "ios"]:
+            return {
+                "type": random.choice(["cellular", "wifi"]),
+                "effectiveType": random.choice(["4g", "3g", "slow-2g"]),
+                "downlink": round(random.uniform(1.0, 10.0), 2),
+                "downlinkMax": round(random.uniform(10.0, 50.0), 2),
+                "rtt": random.randint(50, 200),
+                "saveData": False
+            }
+        else:
+            return {
+                "type": "ethernet",
+                "effectiveType": "4g",
+                "downlink": round(random.uniform(5.0, 50.0), 2),
+                "downlinkMax": round(random.uniform(50.0, 100.0), 2),
+                "rtt": random.randint(10, 50),
+                "saveData": False
+            }
+    
+    def _generate_credential_management(self) -> Dict[str, bool]:
+        """Generate Credential Management API availability"""
+        return {
+            "preventSilentAccess": True,
+            "credentials_available": True,
+            "password_credentials": True,
+            "federated_credentials": True
         }
     
     def _generate_font_list(self, os_type: str) -> List[str]:
