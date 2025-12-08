@@ -16326,9 +16326,15 @@ class RequestOrchestrator2025:
             else:
                 await self.circuit_breaker.record_failure(session_id, request_data["url"])
                 
-                # Handle rate limit specifically - FIXED
+                # AUTO IP ROTATION FOR RATE LIMITS, BLOCKS, AND BAD REQUESTS - NEW
+                should_rotate_ip = False
+                rotation_reason = ""
+                
+                # Handle rate limit (429)
                 if response["status"] == 429:
-                    print(f"{merah}⚠️  Rate limit detected for session {session_id[:8]}...{reset}")
+                    print(f"{merah}⚠️  Rate limit detected (429) for session {session_id[:8]}...{reset}")
+                    should_rotate_ip = True
+                    rotation_reason = "rate_limit_429"
                     
                     # Update session state
                     self.session_manager.update_session_state(session_id, {
@@ -16339,9 +16345,65 @@ class RequestOrchestrator2025:
                                 .get("rate_limit_hits", 0) + 1
                         }
                     })
+                
+                # Handle bad request (400) - often indicates IP is flagged
+                elif response["status"] == 400:
+                    print(f"{merah}⚠️  Bad request (400) detected for session {session_id[:8]}...{reset}")
+                    # Check if this is IP-related (multiple 400s in short time)
+                    session_state = self.session_manager.session_states.get(session_id, {})
+                    bad_request_count = session_state.get("performance_metrics", {}).get("bad_request_count", 0)
                     
-                    # Trigger IP rotation jika diperlukan
-                    if self.account_creator and request_data.get("retry_count", 0) == 0:
+                    if bad_request_count >= 1:  # After 2nd bad request, rotate
+                        should_rotate_ip = True
+                        rotation_reason = "repeated_400_errors"
+                        print(f"{kuning}    Multiple 400 errors detected, rotating IP...{reset}")
+                    
+                    # Update counter
+                    self.session_manager.update_session_state(session_id, {
+                        "error_log": "Bad request 400",
+                        "performance_metrics": {
+                            "bad_request_count": bad_request_count + 1
+                        }
+                    })
+                
+                # Handle IP block (403 with specific indicators)
+                elif response["status"] == 403:
+                    body_text = response.get("body", b"").decode('utf-8', errors='ignore').lower()
+                    if any(keyword in body_text for keyword in ["ip", "block", "banned", "restricted"]):
+                        print(f"{merah}⚠️  IP block detected (403) for session {session_id[:8]}...{reset}")
+                        should_rotate_ip = True
+                        rotation_reason = "ip_block_403"
+                    else:
+                        print(f"{kuning}⚠️  Access forbidden (403) - may need CSRF token refresh{reset}")
+                
+                # Perform auto IP rotation if needed
+                if should_rotate_ip and self.account_creator and request_data.get("retry_count", 0) == 0:
+                    print(f"{cyan}🔄  AUTO IP ROTATION triggered - Reason: {rotation_reason}{reset}")
+                    
+                    # Get current IP before rotation
+                    current_ip = session.get("ip_config", {}).get("ip", "unknown")
+                    print(f"{kuning}    Current IP: {current_ip} - Switching...{reset}")
+                    
+                    # Mark current IP as problematic if it's a block or repeated errors
+                    if rotation_reason in ["ip_block_403", "repeated_400_errors"]:
+                        current_country = session.get("ip_config", {}).get("country", "unknown")
+                        current_isp = session.get("ip_config", {}).get("isp", "unknown")
+                        save_blocked_ip(current_ip, current_isp, current_country, rotation_reason)
+                        print(f"{merah}    Marked IP {current_ip} as blocked{reset}")
+                    
+                    # Rotate IP with full fingerprint regeneration
+                    success = await self.account_creator.rotate_ip_with_fingerprint(session_id)
+                    
+                    if success:
+                        new_ip = self.session_manager.get_session(session_id).get("ip_config", {}).get("ip", "unknown")
+                        print(f"{hijau}✅  IP rotated successfully: {current_ip} → {new_ip}{reset}")
+                        
+                        # Wait before retry
+                        wait_time = random.uniform(5, 15)
+                        print(f"{cyan}    Waiting {wait_time:.1f}s before retry...{reset}")
+                        await asyncio.sleep(wait_time)
+                    else:
+                        print(f"{merah}❌  IP rotation failed, handling with delay...{reset}")
                         await self._handle_rate_limit(session_id, request_data)
             
             # Cache response jika perlu
