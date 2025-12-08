@@ -2214,6 +2214,12 @@ class UnifiedSessionManager2025:
             "languages": languages,
             "locale": locale,
             "country": country,
+            # Enhanced APIs for better fingerprinting resistance
+            "battery": self._generate_battery_status(os_type),
+            "mediaDevices": self._generate_media_devices(os_type),
+            "permissions": self._generate_permissions_state(),
+            "gamepad": self._generate_gamepad_info(),
+            "sensors": self._generate_sensor_apis(os_type),
         }
     
     def _generate_font_list(self, os_type: str) -> List[str]:
@@ -2237,6 +2243,112 @@ class UnifiedSessionManager2025:
                 {"name": "Chrome PDF Viewer", "filename": "mhjfbmdgcfjbbpaeojofohoefgiehjai"},
                 {"name": "Chromium PDF Viewer", "filename": "internal-pdf-viewer"},
             ]
+    
+    def _generate_battery_status(self, os_type: str) -> Dict[str, Any]:
+        """Generate realistic battery status for mobile devices"""
+        if os_type in ["android", "ios"]:
+            charging = random.choice([True, False])
+            return {
+                "charging": charging,
+                "chargingTime": random.randint(1800, 7200) if charging else float('inf'),
+                "dischargingTime": float('inf') if charging else random.randint(7200, 28800),
+                "level": round(random.uniform(0.20, 0.95), 2),
+            }
+        else:
+            # Desktop usually doesn't expose battery
+            return None
+    
+    def _generate_media_devices(self, os_type: str) -> Dict[str, Any]:
+        """Generate realistic media devices enumeration"""
+        devices = []
+        
+        # Camera devices
+        if os_type in ["android", "ios"]:
+            devices.extend([
+                {
+                    "deviceId": hashlib.md5(f"front_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                    "kind": "videoinput",
+                    "label": "Front Camera" if os_type == "android" else "Front Camera (Built-in)",
+                    "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+                },
+                {
+                    "deviceId": hashlib.md5(f"back_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                    "kind": "videoinput",
+                    "label": "Back Camera" if os_type == "android" else "Back Camera (Built-in)",
+                    "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+                },
+            ])
+        else:
+            devices.append({
+                "deviceId": hashlib.md5(f"integrated_camera_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                "kind": "videoinput",
+                "label": "Integrated Camera (Built-in)",
+                "groupId": hashlib.md5(f"camera_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+            })
+        
+        # Microphones
+        mic_labels = ["Default - Microphone", "Built-in Microphone"] if os_type not in ["android", "ios"] else ["Microphone"]
+        for label in mic_labels[:1]:  # Usually just 1 mic
+            devices.append({
+                "deviceId": hashlib.md5(f"microphone_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+                "kind": "audioinput",
+                "label": label,
+                "groupId": hashlib.md5(f"audio_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+            })
+        
+        # Speakers
+        devices.append({
+            "deviceId": hashlib.md5(f"speaker_{random.randint(1000, 9999)}".encode()).hexdigest()[:32],
+            "kind": "audiooutput",
+            "label": "Default - Speaker" if os_type not in ["android", "ios"] else "Speaker",
+            "groupId": hashlib.md5(f"audio_group_{random.randint(1000, 9999)}".encode()).hexdigest()[:16]
+        })
+        
+        return {
+            "devices": devices,
+            "supported": True
+        }
+    
+    def _generate_permissions_state(self) -> Dict[str, str]:
+        """Generate realistic permissions state"""
+        return {
+            "geolocation": random.choice(["granted", "denied", "prompt"]),
+            "notifications": random.choice(["granted", "denied", "prompt"]),
+            "camera": random.choice(["denied", "prompt"]),  # Usually not granted by default
+            "microphone": random.choice(["denied", "prompt"]),  # Usually not granted by default
+            "clipboard-read": "prompt",
+            "clipboard-write": "granted",
+        }
+    
+    def _generate_gamepad_info(self) -> Dict[str, Any]:
+        """Generate gamepad information (usually empty but should be available)"""
+        # Most users don't have gamepads, but API should be available
+        return {
+            "supported": True,
+            "gamepads": [],  # Empty array is normal
+            "timestamp": time.time() * 1000,
+        }
+    
+    def _generate_sensor_apis(self, os_type: str) -> Dict[str, Any]:
+        """Generate sensor API availability (mobile devices)"""
+        if os_type in ["android", "ios"]:
+            return {
+                "deviceorientation": True,
+                "devicemotion": True,
+                "accelerometer": True,
+                "gyroscope": True,
+                "magnetometer": os_type == "android",  # iOS usually doesn't expose this
+                "ambient_light": os_type == "android",
+            }
+        else:
+            return {
+                "deviceorientation": False,
+                "devicemotion": False,
+                "accelerometer": False,
+                "gyroscope": False,
+                "magnetometer": False,
+                "ambient_light": False,
+            }
     
     def _generate_initial_cookies(self, session_id: str) -> Dict[str, str]:
         """Generate valid Instagram session cookies
